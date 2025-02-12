@@ -29,11 +29,20 @@ export default [
       ...react.configs.recommended.rules,
       ...react.configs['jsx-runtime'].rules,
       ...reactHooks.configs.recommended.rules,
+      //react
       'react/jsx-no-target-blank': 'off',
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true }
       ],
+      //MUI
+      'no-restricted-imports': [
+        'error',
+        {
+          'patterns': ['@mui/*/*/*']
+        }
+      ],
+      //common
       'no-console': 1,
       'no-lonely-if': 1,
       'no-unused-vars': 1,
