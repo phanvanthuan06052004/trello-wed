@@ -1,18 +1,20 @@
-
-import Button from '@mui/material/Button'
 import { useColorScheme } from '@mui/material/styles'
 
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
+import Box from '@mui/material/Box'
+import Container from '@mui/material/Container'
 
+import LightModeIcon from '@mui/icons-material/LightMode'
+import Brightness4Icon from '@mui/icons-material/Brightness4'
+import SettingsBrightnessIcon from '@mui/icons-material/SettingsBrightness'
 
 function ThemeMode() {
   const { mode, setMode } = useColorScheme()
 
   const handleChange = (event) => {
-    // setAge(event.target.value)
     const modeSelected = event.target.value
     setMode(modeSelected)
   }
@@ -27,36 +29,58 @@ function ThemeMode() {
         label="mode"
         onChange={handleChange}
       >
-        <MenuItem value="light">Light</MenuItem>
-        <MenuItem value="dark">Dark</MenuItem>
-        <MenuItem value="system">System</MenuItem>
+        <MenuItem value="light">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <LightModeIcon />
+            Light
+          </div>
+        </MenuItem>
+        <MenuItem value="dark">
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Brightness4Icon />
+            Dark
+          </Box>
+        </MenuItem>
+        <MenuItem value="system">
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <SettingsBrightnessIcon />
+            System
+          </Box>
+        </MenuItem>
       </Select>
     </FormControl>
-  )
-}
-
-function ModeToggle() {
-  const { mode, setMode } = useColorScheme()
-  return (
-    <Button
-      onClick={() => {
-        setMode(mode === 'light' ? 'dark' : 'light')
-      }}
-    >
-      {mode === 'light' ? 'Turn dark' : 'Turn light'}
-    </Button>
   )
 }
 
 function App() {
 
   return (
-    <>
-      <ThemeMode />
-      <hr />
-      <ModeToggle />
-      <Button variant="contained">Hello world</Button>
-    </>
+    <Container disableGutters maxWidth={false} sx={{ height: '100vh' }}>
+      <Box sx={{
+        display: 'flex',
+        alignItems: 'center',
+        height: (theme) => theme.trello.appBarHeight,
+        backgroundColor: 'primary.main'
+      }}>
+        <ThemeMode />
+      </Box>
+      <Box sx={{
+        display: 'flex',
+        alignItems: 'center',
+        height: (theme) => theme.trello.boardBarHeight,
+        backgroundColor: 'primary.dark'
+      }}>
+       Board Bar
+      </Box>
+      <Box sx={{
+        display: 'flex',
+        alignItems: 'center',
+        height: (theme) => `calc(100vh - ${theme.trello.appBarHeight} - ${theme.trello.boardBarHeight})`,
+        backgroundColor: 'primary.50'
+      }}>
+        Content
+      </Box>
+    </Container>
   )
 }
 
