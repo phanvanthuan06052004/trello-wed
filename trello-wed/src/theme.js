@@ -1,4 +1,3 @@
-import { BorderColor } from '@mui/icons-material'
 import { teal, cyan, deepOrange, orange } from '@mui/material/colors'
 import { experimental_extendTheme as extendTheme } from '@mui/material/styles'
 // Create a theme instance.
@@ -22,6 +21,22 @@ const theme = extendTheme({
     }
   },
   components: {
+    MuiCssBaseline:{
+      styleOverrides: { //customize scollBar
+        body: {
+          '*::-webkit-scrollbar': {
+            width: '5px'
+          },
+          '*::-webkit-scrollbar-thumb': {
+            backgroundColor: '#bdc3c7',
+            borderRadius: '8px'
+          },
+          '*::-webkit-scrollbar-thumb:hover': {
+            backgroundColor: '#00b894'
+          }
+        }
+      }
+    },
     MuiButton: {
       styleOverrides: {
         root: {
