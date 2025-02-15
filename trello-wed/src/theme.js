@@ -1,24 +1,23 @@
-import { teal, cyan, deepOrange, orange } from '@mui/material/colors'
 import { experimental_extendTheme as extendTheme } from '@mui/material/styles'
 // Create a theme instance.
 const theme = extendTheme({
   trello: {
-    appBarHeight: '55px',
-    boardBarHeight: '58px'
+    appBarHeight: '60px',
+    boardBarHeight: '68px'
   },
-  colorSchemes: {
-    light: {
-      palette: {
-        primary: teal,
-        secondary: deepOrange
-      }
-    },
-    dark: {
-      palette: {
-        primary: cyan,
-        secondary: orange
-      }
-    }
+  colorSchemes: { //set up for mode
+    // light: {
+    //   palette: {
+    //     primary: teal,
+    //     secondary: deepOrange
+    //   }
+    // },
+    // dark: {
+    //   palette: {
+    //     primary: cyan,
+    //     secondary: orange
+    //   }
+    // }
   },
   components: {
     MuiCssBaseline:{
@@ -32,7 +31,7 @@ const theme = extendTheme({
             borderRadius: '8px'
           },
           '*::-webkit-scrollbar-thumb:hover': {
-            backgroundColor: '#00b894'
+            backgroundColor: 'white'
           }
         }
       }
@@ -46,29 +45,17 @@ const theme = extendTheme({
     },
     MuiInputLabel: {
       styleOverrides: {
-        root: ({ theme }) => ({
-          fontSize: '0.875rem',
-          color: theme.palette.primary.main
-        })
+        root: { fontSize: '0.875rem' }
       }
     },
     MuiOutlinedInput: {
       styleOverrides: {
-        root: ({ theme }) => ({
-          color: theme.palette.primary.main,
+        root: {
           fontSize: '0.875rem',
-          '.MuiOutlinedInput-notchedOutline': { //chỉnh borer outline
-            borderColor: theme.palette.primary.light
-          },
-          '&:hover':{
-            '.MuiOutlinedInput-notchedOutline': {
-              borderColor: theme.palette.primary.main
-            }
-          },
-          '& fieldset': { //tránh focus outline tô đậm
-            borderWidth: '1px !important'
-          }
-        })
+          '& fieldset': { borderWidth: '0.5px !important' },
+          '&:hover fieldset': { borderWidth: '1px !important' },
+          '&.Mui-focused fieldset': { borderWidth: '1px !important' }
+        }
       }
     }
   }

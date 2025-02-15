@@ -60,6 +60,7 @@ export default function Workspace() {
         aria-haspopup="true"
         onClick={handleToggle}
         endIcon={ <KeyboardArrowDownIcon/> }
+        sx={{ color: 'white' }}
       >
         Workspaces
       </Button>

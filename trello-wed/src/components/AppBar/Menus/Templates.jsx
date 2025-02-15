@@ -60,6 +60,7 @@ export default function Templates() {
         aria-haspopup="true"
         onClick={handleToggle}
         endIcon={ <KeyboardArrowDownIcon/> }
+        sx={{ color: 'white' }}
       >
         Templates
       </Button>
