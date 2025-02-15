@@ -1,4 +1,26 @@
 import { Box } from '@mui/material'
+import Chip from '@mui/material/Chip'
+import DashboardIcon from '@mui/icons-material/Dashboard'
+import VpnLockIcon from '@mui/icons-material/VpnLock'
+import AddToDriveIcon from '@mui/icons-material/AddToDrive'
+import BoltIcon from '@mui/icons-material/Bolt'
+import FilterListIcon from '@mui/icons-material/FilterList'
+import Avatar from '@mui/material/Avatar'
+import AvatarGroup from '@mui/material/AvatarGroup'
+import Button from '@mui/material/Button'
+import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt'
+const BOARD_CSS = {
+  color: 'primary.main',
+  '& .MuiSvgIcon-root': {
+    color: 'primary.main'
+  },
+  borderRadius: '4px',
+  bgcolor: 'white',
+  border: 'none',
+  '&:hover':{
+    bgcolor: 'primary.50'
+  }
+}
 function BoardBar() {
   return (
     <>
@@ -6,9 +28,59 @@ function BoardBar() {
         display: 'flex',
         alignItems: 'center',
         height: (theme) => theme.trello.boardBarHeight,
-        backgroundColor: 'primary.dark'
+        borderTop: '1px solid #000',
+        justifyContent: 'space-between',
+        px: 1.5,
+        overflowX: 'auto'
       }}>
-        Board Bar
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mr: 2 }}>
+          <Chip
+            icon={<DashboardIcon />}
+            label="thuandev"
+            clickable
+            sx={BOARD_CSS}
+          />
+          <Chip
+            icon={<VpnLockIcon />}
+            label="Public/Private Worplace"
+            clickable
+            sx={BOARD_CSS}
+          />
+          <Chip
+            icon={<AddToDriveIcon />}
+            label="Add to Google drive"
+            clickable
+            sx={BOARD_CSS}
+          />
+          <Chip
+            icon={<BoltIcon />}
+            label="Automation"
+            clickable
+            sx={BOARD_CSS}
+          />
+          <Chip
+            icon={<FilterListIcon />}
+            label="Filter"
+            clickable
+            sx={BOARD_CSS}
+          />
+        </Box>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mr: 2 }}>
+          <Button variant="outlined" startIcon={ <PersonAddAltIcon/>}>Invite</Button>
+          <AvatarGroup max={4} sx={{
+            '& .MuiAvatar-root': {
+              width: 32,
+              height: 32,
+              fontSize: 'small'
+            }
+          }}>
+            <Avatar src='https://avatars.githubusercontent.com/u/130242948?v=4' />
+            <Avatar src='https://avatars.githubusercontent.com/u/130242948?v=4' />
+            <Avatar src='https://avatars.githubusercontent.com/u/130242948?v=4' />
+            <Avatar src='https://avatars.githubusercontent.com/u/130242948?v=4' />
+            <Avatar src='https://avatars.githubusercontent.com/u/130242948?v=4' />
+          </AvatarGroup>
+        </Box>
       </Box>
     </>
   )
