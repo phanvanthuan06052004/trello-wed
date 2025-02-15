@@ -60,6 +60,7 @@ export default function Recent() {
         aria-haspopup="true"
         onClick={handleToggle}
         endIcon={ <KeyboardArrowDownIcon/> }
+        sx={{ color: 'white' }}
       >
         Recent
       </Button>

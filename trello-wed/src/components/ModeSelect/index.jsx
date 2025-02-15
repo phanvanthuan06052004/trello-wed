@@ -18,14 +18,33 @@ function ModeSelect() {
     setMode(modeSelected)
   }
   return (
-    <FormControl sx={{ minWidth: 120 }} size="small">
-      <InputLabel id="select-mode-label">Mode</InputLabel>
+    <FormControl
+      sx={{
+        minWidth: 120
+      }}
+      size="small"
+    >
+      <InputLabel
+        id="select-mode-label"
+        sx={{
+          color: 'white',
+          '&.Mui-focused': { color: 'white' } }}
+      >
+        Mode
+      </InputLabel>
       <Select
         labelId="select-mode-label"
         id="select-mode"
         value={mode}
         label="mode"
         onChange={handleChange}
+        sx={{
+          color: 'white',
+          '.MuiSvgIcon-root': { color: 'white' },
+          '.MuiOutlinedInput-notchedOutline': { borderColor: 'white' },
+          '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'white' },
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'white' }
+        }}
       >
         <MenuItem value="light">
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>

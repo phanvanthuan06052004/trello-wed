@@ -60,6 +60,7 @@ export default function Starred() {
         aria-haspopup="true"
         onClick={handleToggle}
         endIcon={ <KeyboardArrowDownIcon/> }
+        sx={{ color: 'white' }}
       >
         Starred
       </Button>
