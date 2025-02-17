@@ -1,4 +1,3 @@
-import { Height } from '@mui/icons-material'
 import { experimental_extendTheme as extendTheme } from '@mui/material/styles'
 const APP_BAR_HEIGHT = '60px'
 const BOARD_BAR_HEIGHT = '68px'

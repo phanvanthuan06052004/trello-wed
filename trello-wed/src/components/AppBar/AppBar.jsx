@@ -1,5 +1,5 @@
 import { Box } from '@mui/material'
-import ModeSelect from '../ModeSelect'
+import ModeSelect from '../ModeSelect/ModeSelect'
 import AppsIcon from '@mui/icons-material/Apps'
 import SvgIcon from '@mui/material/SvgIcon'
 import { ReactComponent as TrelloIcon } from '~/assets/trello.svg'
@@ -20,7 +20,7 @@ import InputAdornment from '@mui/material/InputAdornment'
 import SearchIcon from '@mui/icons-material/Search'
 import CloseIcon from '@mui/icons-material/Close'
 import { useState } from 'react'
-function Appbar() {
+function AppBar() {
   const [searchValue, setSearchValue] = useState('')
   return (
     <>
@@ -116,4 +116,4 @@ function Appbar() {
   )
 }
 
-export default Appbar
+export default AppBar
