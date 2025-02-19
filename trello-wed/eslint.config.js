@@ -42,6 +42,7 @@ export default [
           'patterns': ['@mui/*/*/*']
         }
       ],
+      'react/prop-types': 'off',
       //common
       'no-console': 1,
       'no-lonely-if': 1,

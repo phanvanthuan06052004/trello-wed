@@ -1,6 +1,6 @@
 import { Box } from '@mui/material'
 import Column from './Column/Column'
-function ListColumns() {
+function ListColumns({ columns }) {
 
 
   return (
@@ -17,7 +17,7 @@ function ListColumns() {
         }
       }}>
         {/* box column  */}
-        <Column />
+        {columns.map((data) => <Column key={data._id} column={data}/>)}
       </Box>
     </>
   )

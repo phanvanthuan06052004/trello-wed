@@ -2,7 +2,7 @@ import { Box } from '@mui/material'
 import Card from './Card/Card'
 const COLUMN_HEADER_HEIGHT = '50px'
 const COLUMN_FOOTER_HEIGHT = '56px'
-function Listcards() {
+function Listcards({ cards }) {
   return (
     <>
       <Box sx={{
@@ -22,8 +22,7 @@ function Listcards() {
           backgroundColor: 'bfc2cf'
         }
       }}>
-
-        <Card temporaryHiddenMedia/>
+        {cards.map((data) => <Card key={data._id} card={data}/>)}
       </Box>
     </>
   )

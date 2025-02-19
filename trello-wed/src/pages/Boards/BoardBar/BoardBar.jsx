@@ -9,6 +9,7 @@ import Avatar from '@mui/material/Avatar'
 import AvatarGroup from '@mui/material/AvatarGroup'
 import Button from '@mui/material/Button'
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt'
+import { capitalizeFirstLetter } from '~/utils/formatters'
 const BOARD_CSS = {
   color: 'white',
   '& .MuiSvgIcon-root': {
@@ -21,7 +22,7 @@ const BOARD_CSS = {
     bgcolor: 'primary.50'
   }
 }
-function BoardBar() {
+function BoardBar({ board }) {
   return (
     <>
       <Box sx={{
@@ -37,13 +38,13 @@ function BoardBar() {
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mr: 2 }}>
           <Chip
             icon={<DashboardIcon />}
-            label="thuandev"
+            label={board?.title}
             clickable
             sx={BOARD_CSS}
           />
           <Chip
             icon={<VpnLockIcon />}
-            label="Public/Private Worplace"
+            label={capitalizeFirstLetter(board?.type)}
             clickable
             sx={BOARD_CSS}
           />
