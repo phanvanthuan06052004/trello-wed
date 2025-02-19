@@ -5,45 +5,25 @@ import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
 import Button from '@mui/material/Button'
 import GroupsIcon from '@mui/icons-material/Groups'
+import AttachmentIcon from '@mui/icons-material/Attachment'
+import CommentIcon from '@mui/icons-material/Comment'
+function Card({ card }) {
 
-
-function Card({ temporaryHiddenMedia }) {
-  if (temporaryHiddenMedia) {
-    return (
-      <>
-        <MuiCard sx={{
-          cursor: 'pointer',
-          boxShadow: '0 1px 1px rgba(0, 0, 0, 0.2)',
-          overflow: 'unset'
-        }}>
-          <CardContent sx={{
-            p: 1.5,
-            '&:last-child': {
-              p: 1.5
-            }
-          }}>
-            <Typography>
-                Card01
-            </Typography>
-          </CardContent>
-        </MuiCard>
-      </>
-    )
+  const shouldShowCardAction = () => {
+    return !!card?.memberIds?.length || !!card?.comments?.length || !!card?.attachments?.length
   }
   return (
     <>
       <MuiCard sx={{
-        maxWidth: 345,
-        maxHeight: 243,
-        minHeight: 234,
         cursor: 'pointer',
-        boxShadow: '0 1px 1px rgba(0, 0, 0, 0.2)'
+        boxShadow: '0 1px 1px rgba(0, 0, 0, 0.2)',
+        overflow: 'unset'
       }}>
-        <CardMedia
+        {card?.cover && <CardMedia
           sx={{ height: 140 }}
-          image="https://avatars.githubusercontent.com/u/130242948?v=4s"
+          image={card?.cover}
           title="green iguana"
-        />
+        />}
         <CardContent sx={{
           p: 1.5,
           '&:last-child': {
@@ -51,14 +31,16 @@ function Card({ temporaryHiddenMedia }) {
           }
         }}>
           <Typography>
-                Lizard
+            {card?.title}
           </Typography>
         </CardContent>
-        <CardActions>
-          <Button size="small" startIcon={<GroupsIcon/>}>20</Button>
-          <Button size="small" startIcon={<GroupsIcon/>}>21</Button>
-          <Button size="small" startIcon={<GroupsIcon/>}>25</Button>
+        {shouldShowCardAction() &&
+        <CardActions sx={{ p: '0 4px 8px 4px' }}>
+          {!!card?.memberIds?.length && <Button size="small" startIcon={<GroupsIcon/>}>{card?.memberIds?.length}</Button> }
+          {!!card?.comments?.length && <Button size="small" startIcon={<CommentIcon/>}>{card?.comments?.length}</Button> }
+          {!!card?.attachments?.length && <Button size="small" startIcon={<AttachmentIcon/>}>{card?.attachments?.length}</Button> }
         </CardActions>
+        }
       </MuiCard>
 
 

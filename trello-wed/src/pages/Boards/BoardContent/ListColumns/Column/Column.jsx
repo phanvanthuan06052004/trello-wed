@@ -20,12 +20,12 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import Tooltip from '@mui/material/Tooltip'
 import DragHandleIcon from '@mui/icons-material/DragHandle'
 import Listcards from './Listcards/Listcards'
-
+import { mapOrder } from '~/utils/Sort'
 const COLUMN_WIDTH = '300px'
 const COLUMN_HEADER_HEIGHT = '50px'
 const COLUMN_FOOTER_HEIGHT = '56px'
 
-function Column() {
+function Column({ column }) {
   const [open, setOpen] = useState(false)
   const anchorRef = useRef(null)
 
@@ -58,6 +58,8 @@ function Column() {
 
     prevOpen.current = open
   }, [open])
+
+  const cardSorted = mapOrder(column?.cards, column?.cardOrderIds, '_id')
   return (
     <>
       <Box sx={{
@@ -66,7 +68,8 @@ function Column() {
         ml: 2,
         borderRadius: '8px',
         bgcolor: ( theme ) => (theme.palette.mode === 'light' ? '#ebecf0' : '#333643'),
-        maxHeight: (theme) => `calc(${theme.trello.boardContentHeight} - ${theme.spacing(5)})`
+        maxHeight: (theme) => `calc(${theme.trello.boardContentHeight} - ${theme.spacing(5)})`,
+        height: 'fit-content'
       }}>
         {/* box header */}
         <Box sx={{
@@ -80,7 +83,7 @@ function Column() {
             fontWeight: 'bold',
             cursor: 'pointer'
           }}>
-            Column Title
+            {column?.title}
           </Typography>
 
           <>
@@ -165,7 +168,7 @@ function Column() {
         </Box>
 
         {/* box card list*/}
-        <Listcards/>
+        <Listcards cards={cardSorted}/>
         {/* box footer */}
         <Box sx={{
           height: COLUMN_FOOTER_HEIGHT,

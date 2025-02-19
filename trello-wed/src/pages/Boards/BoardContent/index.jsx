@@ -1,7 +1,7 @@
 import { Box } from '@mui/material'
 import ListColumns from './ListColumns/ListColumns'
-function BoardContent() {
- 
+
+function BoardContent({ columns }) {
   return (
     <>
       {/* box content */}
@@ -12,7 +12,7 @@ function BoardContent() {
         borderTop: '1px solid white',
         p: '10px 0'
       }}>
-        <ListColumns />
+        <ListColumns columns={columns}/>
       </Box>
     </>
   )
