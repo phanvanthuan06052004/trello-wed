@@ -35,14 +35,17 @@ function Column({ column }) {
     listeners,
     setNodeRef,
     transform,
-    transition
-  } = useSortable({ id: column._id, data: [...cardSorted] })
+    transition,
+    isDragging
+  } = useSortable({ id: column._id, data: { ...column } })
 
   const dndStyleColumn = {
     // giải quyết vấn đè tranform strecht
     // https://github.com/clauderic/dnd-kit/issues/117
     transform: CSS.Translate.toString(transform),
-    transition
+    transition,
+    height: '100%',
+    opacity: isDragging ? 0.5 : undefined
   }
 
   const [open, setOpen] = useState(false)
@@ -80,11 +83,8 @@ function Column({ column }) {
 
 
   return (
-    <>
+    <div ref={setNodeRef} style={dndStyleColumn} {...attributes}>
       <Box
-        ref={setNodeRef}
-        style={dndStyleColumn}
-        {...attributes}
         {...listeners}
         sx={{
           maxWidth: COLUMN_WIDTH,
@@ -210,7 +210,7 @@ function Column({ column }) {
           </Tooltip>
         </Box>
       </Box>
-    </>
+    </div>
   )
 }
 
