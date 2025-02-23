@@ -3,10 +3,8 @@ import AppBar from '~/components/AppBar/AppBar'
 import BoardBar from './BoardBar/BoardBar'
 import BoardContent from './BoardContent/BoardContent'
 import { mockData } from '~/Apis/mock-data'
-import { mapOrder } from '~/utils/Sort'
 
 function Board() {
-  
   return (
     <Container disableGutters maxWidth={false} sx={{ height: '100vh' }}>
       <AppBar />
