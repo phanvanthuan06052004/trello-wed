@@ -1,3 +1,4 @@
+/* eslint-disable no-trailing-spaces */
 import { Box } from '@mui/material'
 import ListColumns from './ListColumns/ListColumns'
 import { useEffect, useState } from 'react'
@@ -37,6 +38,7 @@ function BoardContent({ board }) {
   const [activeDragItemId, setActiveDragItemId] = useState([])
   const [activeDragItemType, setActiveDragItemType] = useState([])
   const [activeDragItemData, setActiveDragItemData] = useState([])
+  const [oldColumnWhenDraggingCard, setOldColumnWhenDraggingCard] = useState([])
 
   const dropAnimation = {
     sideEffects: defaultDropAnimationSideEffects({
@@ -61,6 +63,10 @@ function BoardContent({ board }) {
     setActiveDragItemId(event?.active?.id)
     setActiveDragItemType(event?.active?.data?.current?.columnId ? ACTIVE_DRAG_ITEM_TYPE.CARD : ACTIVE_DRAG_ITEM_TYPE.COLUMN)
     setActiveDragItemData(event?.active?.data?.current)
+
+    if ( event?.active?.data?.current?.columnId ) {
+      setOldColumnWhenDraggingCard(findColumnByCardId(event?.active?.id))
+    }
   }
 
   // trigger trong quá trình kéo phần tử
@@ -117,24 +123,68 @@ function BoardContent({ board }) {
   // console.log(activeDragItemData)
   function handleDragEnd(event) {
     const { active, over } = event
-    if (!over) { return }
 
-    if (active.id !== over.id) {
-      const oldIndex = orderedColumns.findIndex(c => c._id == active.id)
-      const newIndex = orderedColumns.findIndex(c => c._id == over.id)
+    // Tránh crash trang khi kéo quá phạm vi container
+    if (!active || !over) return
 
-      const neworderedColumns = arrayMove(orderedColumns, oldIndex, newIndex)
-      setOrderedColumns(neworderedColumns)
+    // xử lí khi kéo Card
+    if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.CARD) {
+      const { id: activeDraggingCardId, data: { current: activeDraggingCardData } } = active
+      const { id: overCardId } = over
+  
+      // Tìm column dựa vào cardId
+      const activeColumn = findColumnByCardId(activeDraggingCardId)
+      const overColumn = findColumnByCardId(overCardId)
+  
+      if (!activeColumn || !overColumn) return
+  
+      // Có thể dùng activeDraggingData để thay thế cho old nhưng không nên
+      if (oldColumnWhenDraggingCard._id !== overColumn._id) {
+        //
+      } else {
 
-      //   setOrderedColumns((items) => {
-      //     const oldIndex = items.indexOf(active.id)
-      //     const newIndex = items.indexOf(over.id)
+        const oldIndexCard = oldColumnWhenDraggingCard?.cards.findIndex(c => c._id == activeDragItemId)
+        const newIndexCard = overColumn?.cards.findIndex(c => c._id == over.id)
+  
+        const newOrderedCards = arrayMove(oldColumnWhenDraggingCard?.cards, oldIndexCard, newIndexCard)
 
-    //     return arrayMove(items, oldIndex, newIndex) //sắp xếp dựa trên vị trí mới và cũ
-    //     // doc: https://github.com/search?q=repo%3Aclauderic%2Fdnd-kit%20arrayMove&type=code
-    //     // sau này phải thêm logic sử lí lưu thứ tự vào DB tránh F5 mất vị trí
-    //   })
+        setOrderedColumns( prevColumns => {
+          const nextColumns = cloneDeep(prevColumns) // clone danh sách các column
+          const targetColumn = nextColumns.find(x => x._id === overColumn._id) // lấy column đang thao tác kéo các card
+          // set lại các giá card và thứ tự
+          targetColumn.cards = newOrderedCards
+          targetColumn.cardOrderIds = newOrderedCards.map(x => x._id)
+
+          return nextColumns
+        })
+      }
+
     }
+
+    // xử lí khi kéo Column
+    if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) {
+      if (active.id !== over.id) {
+        const oldIndexColumn = orderedColumns.findIndex(c => c._id == active.id)
+        const newIndexColumn = orderedColumns.findIndex(c => c._id == over.id)
+  
+        const neworderedColumns = arrayMove(orderedColumns, oldIndexColumn, newIndexColumn)
+        setOrderedColumns(neworderedColumns)
+  
+        //   setOrderedColumns((items) => {
+        //     const oldIndexColumn = items.indexOf(active.id)
+        //     const newIndexColumn = items.indexOf(over.id)
+  
+      //     return arrayMove(items, oldIndexColumn, newIndexColumn) //sắp xếp dựa trên vị trí mới và cũ
+      //     // doc: https://github.com/search?q=repo%3Aclauderic%2Fdnd-kit%20arrayMove&type=code
+      //     // sau này phải thêm logic sử lí lưu thứ tự vào DB tránh F5 mất vị trí
+      //   })
+      }
+    }
+    
+    setActiveDragItemType(null)
+    setActiveDragItemId(null)
+    setActiveDragItemData(null)
+    setOldColumnWhenDraggingCard(null)
   }
   return (
     <>
