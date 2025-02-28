@@ -3,7 +3,7 @@ import ListColumns from './ListColumns/ListColumns'
 import { useEffect, useState } from 'react'
 import { arrayMove } from '@dnd-kit/sortable'
 import { mapOrder } from '~/utils/Sort'
-import { DndContext, MouseSensor, TouchSensor, useSensor, useSensors, DragOverlay, defaultDropAnimationSideEffects } from '@dnd-kit/core'
+import { DndContext, MouseSensor, TouchSensor, useSensor, useSensors, DragOverlay, defaultDropAnimationSideEffects, closestCorners } from '@dnd-kit/core'
 import Column from './ListColumns/Column/Column'
 import Card from './ListColumns/Column/Listcards/Card/Card'
 import { cloneDeep } from 'lodash'
@@ -140,10 +140,11 @@ function BoardContent({ board }) {
     <>
       {/* box content */}
       <DndContext
-      onDragEnd={handleDragEnd}
-      onDragOver={handleDragOver}
-      onDragStart={handleDragStart}
-      sensors={columnSensors}>
+        collisionDetection={closestCorners}
+        onDragEnd={handleDragEnd}
+        onDragOver={handleDragOver}
+        onDragStart={handleDragStart}
+        sensors={columnSensors}>
         <Box sx={{
           display: 'flex',
           height: (theme) => (theme.trello.boardContentHeight),
