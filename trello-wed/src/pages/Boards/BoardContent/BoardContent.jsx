@@ -7,7 +7,8 @@ import { mapOrder } from '~/utils/Sort'
 import { DndContext, MouseSensor, TouchSensor, useSensor, useSensors, DragOverlay, defaultDropAnimationSideEffects, closestCorners, pointerWithin, getFirstCollision } from '@dnd-kit/core'
 import Column from './ListColumns/Column/Column'
 import Card from './ListColumns/Column/Listcards/Card/Card'
-import { cloneDeep } from 'lodash'
+import { cloneDeep, isEmpty } from 'lodash'
+import { generatePlaceholderCard } from '~/utils/formatters'
 
 const ACTIVE_DRAG_ITEM_TYPE = {
   CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD',
@@ -119,17 +120,24 @@ function BoardContent({ board }) {
       const nextActiveColumn = nextColumns.find(x => x._id === activeColumn._id)
       const nextOverColumn = nextColumns.find(x => x._id === overColumn._id)
 
+      // column cũ trước khi kéo
       if (nextActiveColumn) {
         nextActiveColumn.cards = nextActiveColumn.cards.filter(x => x._id !== activeDraggingCardId)
+        // xử lí khi card bị rỗng thì thêm card giữ chỗ
+        if (isEmpty(nextActiveColumn.cards)) {
+          nextActiveColumn.cards = [generatePlaceholderCard(nextActiveColumn)]
+        }
         nextActiveColumn.cardOrderIds = nextActiveColumn.cards.map(x => x._id)
       }
 
+      //column mới sau khi kéo
       if (nextOverColumn) {
         nextOverColumn.cards = nextOverColumn.cards.filter(x => x._id !== activeDraggingCardId)
         nextOverColumn.cards = nextOverColumn.cards.toSpliced(newCardIndex, 0, activeDraggingCardData)
+        nextOverColumn.cards = nextOverColumn.cards.filter(x => !x.FE_PlaceholderCard) // Xử lý cho trường hợp dư thừa data giữ chỗ (xóa cho đơ rác)
         nextOverColumn.cardOrderIds = nextOverColumn.cards.map(x => x._id)
       }
-
+      
       return nextColumns
     })
   }
