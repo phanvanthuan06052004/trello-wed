@@ -1,10 +1,10 @@
 /* eslint-disable no-trailing-spaces */
-import { Box, Container } from '@mui/material'
+import { Box } from '@mui/material'
 import ListColumns from './ListColumns/ListColumns'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { arrayMove } from '@dnd-kit/sortable'
 import { mapOrder } from '~/utils/Sort'
-import { DndContext, MouseSensor, TouchSensor, useSensor, useSensors, DragOverlay, defaultDropAnimationSideEffects, closestCorners, closestCenter, pointerWithin, rectIntersection, getFirstCollision } from '@dnd-kit/core'
+import { DndContext, MouseSensor, TouchSensor, useSensor, useSensors, DragOverlay, defaultDropAnimationSideEffects, closestCorners, pointerWithin, getFirstCollision } from '@dnd-kit/core'
 import Column from './ListColumns/Column/Column'
 import Card from './ListColumns/Column/Listcards/Card/Card'
 import { cloneDeep } from 'lodash'
@@ -61,16 +61,18 @@ function BoardContent({ board }) {
     // Tìm các điểm giao nhau với con trỏ
     const pointerIntersections = pointerWithin(args)
 
+    // ngoài vùng kéo thì khoong làm gì cả cho khỏe
+    if (!pointerIntersections?.length) return
     // Thuật toán phát hiện va chạm và trả về 1 mảng va chạm tại đây
-    const intersections = !!pointerIntersections.length ? pointerIntersections : rectIntersection(args)
+    //const intersections = !!pointerIntersections.length ? pointerIntersections : rectIntersection(args)
 
-    let overId = getFirstCollision(intersections, 'id')
+    let overId = getFirstCollision(pointerIntersections, 'id')
 
     if (overId) {
       const checkColumn = orderedColumns.find(c => c._id === overId)
       if (checkColumn) {
       //khi over qua thì nó chọn card chứ không phải column
-        overId = closestCenter({
+        overId = closestCorners({
           ...args,
           droppableContainers: args.droppableContainers.filter(container => {
             return (container.id !== overId) && (checkColumn?.cardOrderIds?.includes(container.id))
