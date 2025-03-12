@@ -3,8 +3,18 @@ import AppBar from '~/components/AppBar/AppBar'
 import BoardBar from './BoardBar/BoardBar'
 import BoardContent from './BoardContent/BoardContent'
 import { mockData } from '~/Apis/mock-data'
-
+import { useEffect, useState } from 'react'
+import { fetchBoarDetailsAPI } from '~/Apis'
 function Board() {
+
+  const [board, setBoard] = useState(null)
+
+  useEffect(() => {
+    const boardId = '67cd36305e38715fecfb1c3b'
+    fetchBoarDetailsAPI(boardId)
+      .then(board => setBoard(board))
+  }, [])
+
   return (
     <Container disableGutters maxWidth={false} sx={{ height: '100vh' }}>
       <AppBar />
