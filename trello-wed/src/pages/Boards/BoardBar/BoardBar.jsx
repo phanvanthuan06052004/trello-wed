@@ -10,6 +10,7 @@ import AvatarGroup from '@mui/material/AvatarGroup'
 import Button from '@mui/material/Button'
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt'
 import { capitalizeFirstLetter } from '~/utils/formatters'
+import Tooltip from '@mui/material/Tooltip'
 const BOARD_CSS = {
   color: 'white',
   '& .MuiSvgIcon-root': {
@@ -36,12 +37,14 @@ function BoardBar({ board }) {
         bgcolor: ( theme ) => (theme.palette.mode === 'light' ? '#1976d2' : '#34495e')
       }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mr: 2 }}>
-          <Chip
-            icon={<DashboardIcon />}
-            label={board?.title}
-            clickable
-            sx={BOARD_CSS}
-          />
+          <Tooltip title={board?.description}>
+            <Chip
+              icon={<DashboardIcon />}
+              label={board?.title}
+              clickable
+              sx={BOARD_CSS}
+            />
+          </Tooltip>
           <Chip
             icon={<VpnLockIcon />}
             label={capitalizeFirstLetter(board?.type)}
