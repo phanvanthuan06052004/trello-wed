@@ -15,7 +15,7 @@ function Listcards({ cards }) {
           overflowY: 'auto',
           overflowX: 'hidden',
           maxHeight: (theme) => `calc(${theme.trello.boardContentHeight} - ${COLUMN_HEADER_HEIGHT} - ${COLUMN_FOOTER_HEIGHT}  - ${theme.spacing(5)})`,
-          p: '0 5px',
+          p: '0 5px 5px 5px',
           m: '0 5px',
           '&::-webkit-scrollbar-thumb': {
             backgroundColor: '#ced0da',
