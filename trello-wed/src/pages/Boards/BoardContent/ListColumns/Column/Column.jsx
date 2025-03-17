@@ -237,6 +237,7 @@ function Column({ column }) {
                 onChange={(e) => setNewTitle(e.target.value)}
                 id="outlined-basic-search"
                 label="Enter new card"
+                data-no-dnd="true"
                 variant="outlined"
                 autoFocus
                 size='small'
@@ -280,7 +281,6 @@ function Column({ column }) {
             </Box>
           }
         </Box>
-        
       </Box>
     </div>
   )
