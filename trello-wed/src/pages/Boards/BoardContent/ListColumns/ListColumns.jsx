@@ -5,6 +5,7 @@ import PostAddIcon from '@mui/icons-material/PostAdd'
 import TextField from '@mui/material/TextField'
 import CloseIcon from '@mui/icons-material/Close'
 import { useState } from 'react'
+import { toast } from 'react-toastify'
 function ListColumns({ columns }) {
 
   // Xử lí đóng mở button add new column
@@ -17,7 +18,10 @@ function ListColumns({ columns }) {
   const [newTitle, setNewTitle] = useState('')
 
   const addNewColumn = () => {
-    if (!newTitle) return // Nếu ko nhập gì thì ko làm
+    if (!newTitle) {
+      toast.error('Please enter column name!', { position: 'bottom-left' })
+      return
+    } // Nếu ko nhập gì thì ko làm
 
     setNewTitle('')
     toggleOpenNewColumnForm()

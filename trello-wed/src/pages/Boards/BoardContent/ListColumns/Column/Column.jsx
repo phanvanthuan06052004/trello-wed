@@ -25,6 +25,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import { mapOrder } from '~/utils/Sort'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { toast } from 'react-toastify'
 
 const COLUMN_WIDTH = '300px'
 const COLUMN_HEADER_HEIGHT = '50px'
@@ -41,7 +42,10 @@ function Column({ column }) {
   const [newTitle, setNewTitle] = useState('')
 
   const addNewCard = () => {
-    if (!newTitle) return // Nếu ko nhập gì thì ko làm
+    if (!newTitle) {
+      toast.error('Please enter card name!', { position: 'top-right' })
+      return
+    } // Nếu ko nhập gì thì ko làm
 
     setNewTitle('')
     toggleOpenNewCardForm()
