@@ -31,7 +31,7 @@ const COLUMN_WIDTH = '300px'
 const COLUMN_HEADER_HEIGHT = '50px'
 const COLUMN_FOOTER_HEIGHT = '56px'
 
-function Column({ column }) {
+function Column({ column, createNewCard }) {
   // Xử lí đóng mở button add new card
   const [openNewCard, setOpenNewCard] = useState(false)
   const toggleOpenNewCardForm = () => {
@@ -41,12 +41,19 @@ function Column({ column }) {
 
   const [newTitle, setNewTitle] = useState('')
 
-  const addNewCard = () => {
+  const addNewCard = async () => {
     if (!newTitle) {
       toast.error('Please enter card name!', { position: 'top-right' })
       return
     } // Nếu ko nhập gì thì ko làm
 
+    const newCardData = {
+      title: newTitle,
+      columnId: column._id
+    }
+
+    // gọi API tạo card
+    await createNewCard(newCardData)
     setNewTitle('')
     toggleOpenNewCardForm()
   }
