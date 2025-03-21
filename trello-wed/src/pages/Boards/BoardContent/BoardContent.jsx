@@ -15,7 +15,7 @@ const ACTIVE_DRAG_ITEM_TYPE = {
   CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD',
   COLUMN: 'ACTIVE_DRAG_ITEM_TYPE_COLUMN'
 }
-function BoardContent({ board }) {
+function BoardContent({ board, createNewColumn, createNewCard, moveColumn }) {
   const mouseSensor = useSensor(MouseSensor, {
     // Require the mouse to move by 10 pixels before activating
     activationConstraint: {
@@ -241,8 +241,10 @@ function BoardContent({ board }) {
         const oldIndexColumn = orderedColumns.findIndex(c => c._id == active.id)
         const newIndexColumn = orderedColumns.findIndex(c => c._id == over.id)
   
-        const neworderedColumns = arrayMove(orderedColumns, oldIndexColumn, newIndexColumn)
-        setOrderedColumns(neworderedColumns)
+        const newOrderedColumns = arrayMove(orderedColumns, oldIndexColumn, newIndexColumn)
+
+        moveColumn(newOrderedColumns)
+        setOrderedColumns(newOrderedColumns)
   
         //   setOrderedColumns((items) => {
         //     const oldIndexColumn = items.indexOf(active.id)
@@ -279,7 +281,7 @@ function BoardContent({ board }) {
           borderTop: '1px solid white',
           p: '10px 0'
         }}>
-          <ListColumns columns={orderedColumns}/>
+          <ListColumns createNewCard={createNewCard} createNewColumn={createNewColumn} columns={orderedColumns}/>
           <DragOverlay dropAnimation={dropAnimation}>
             {(!activeDragItemId || !activeDragItemType ) && null}
             {(activeDragItemId && activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) && <Column column={activeDragItemData}/>}
