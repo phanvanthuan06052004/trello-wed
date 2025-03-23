@@ -3,7 +3,7 @@ import AppBar from '~/components/AppBar/AppBar'
 import BoardBar from './BoardBar/BoardBar'
 import BoardContent from './BoardContent/BoardContent'
 import { useEffect, useState } from 'react'
-import { fetchBoarDetailsAPI, createNewCardAPI, createNewColumnAPI, updateBoarDetailsAPI } from '~/Apis'
+import { fetchBoarDetailsAPI, createNewCardAPI, createNewColumnAPI, updateBoardDetailsAPI, updateColumnDetailsAPI, moveCardDifferenceColumnAPI } from '~/Apis'
 function Board() {
 
   const [board, setBoard] = useState(null)
@@ -50,8 +50,44 @@ function Board() {
     newBoard.columns = newOrderedColumns
     setBoard(newBoard)
 
-    await updateBoarDetailsAPI(board._id, {
+    await updateBoardDetailsAPI(board._id, {
       columnOrderIds: orderedColumn
+    })
+  }
+
+  const moveCardSameColumn = async (listCard, listCardId, columnId) => {
+
+    // handle refresh page
+    const newBoard = { ...board }
+    const columnToUpdate = newBoard.columns.find(Column => Column._id === columnId)
+    if (columnToUpdate) {
+      columnToUpdate.cards = listCard
+      columnToUpdate.cardOrderIds = listCardId
+    }
+    setBoard(newBoard)
+
+    // call API to update
+    updateColumnDetailsAPI(columnId, {
+      cardOrderIds: listCardId
+    })
+  }
+
+  const moveCardDifferenceColumn = async (dragCardId, prevColumnId, nextColumnId, dndOrderedColumns) => {
+
+    // handle refresh page
+    const nextColumnOrderIds = dndOrderedColumns.map(c => c._id)
+    const newBoard = { ...board }
+    newBoard.columnOrderIds = nextColumnOrderIds
+    newBoard.columns = dndOrderedColumns
+    setBoard(newBoard)
+
+    // call API to update
+    moveCardDifferenceColumnAPI({
+      dragCardId,
+      prevColumnId,
+      prevCardOrderedIds: dndOrderedColumns.find(c => c._id === prevColumnId)?.cardOrderIds,
+      nextColumnId,
+      nextCardOrderedIds: dndOrderedColumns.find(c => c._id === nextColumnId)?.cardOrderIds
     })
   }
 
@@ -64,6 +100,8 @@ function Board() {
         createNewColumn={createNewColumn}
         board={board}
         moveColumn={moveColumn}
+        moveCardSameColumn={moveCardSameColumn}
+        moveCardDifferenceColumn={moveCardDifferenceColumn}
       />
     </Container>
   )
