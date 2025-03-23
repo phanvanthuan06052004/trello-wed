@@ -15,7 +15,7 @@ const ACTIVE_DRAG_ITEM_TYPE = {
   CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD',
   COLUMN: 'ACTIVE_DRAG_ITEM_TYPE_COLUMN'
 }
-function BoardContent({ board, createNewColumn, createNewCard, moveColumn }) {
+function BoardContent({ board, createNewColumn, createNewCard, moveColumn, moveCardSameColumn, moveCardDifferenceColumn }) {
   const mouseSensor = useSensor(MouseSensor, {
     // Require the mouse to move by 10 pixels before activating
     activationConstraint: {
@@ -104,7 +104,8 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumn }) {
     over,
     activeColumn,
     activeDraggingCardId,
-    activeDraggingCardData
+    activeDraggingCardData,
+    triggerForm
   ) => {
     setOrderedColumns( prevColumns => {
 
@@ -137,6 +138,16 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumn }) {
         nextOverColumn.cards = nextOverColumn.cards.toSpliced(newCardIndex, 0, activeDraggingCardData)
         nextOverColumn.cards = nextOverColumn.cards.filter(x => !x.FE_PlaceholderCard) // Xử lý cho trường hợp dư thừa data giữ chỗ (xóa cho đơ rác)
         nextOverColumn.cardOrderIds = nextOverColumn.cards.map(x => x._id)
+      }
+
+      // xử lý gọi API khi kết thúc kéo card giữa các column khác nhau
+      if (triggerForm === 'handleDragEnd') {
+        moveCardDifferenceColumn(
+          activeDraggingCardId,
+          oldColumnWhenDraggingCard._id,
+          nextOverColumn._id,
+          nextColumns
+        )
       }
       
       return nextColumns
@@ -180,7 +191,8 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumn }) {
         over,
         activeColumn,
         activeDraggingCardId,
-        activeDraggingCardData
+        activeDraggingCardData,
+        'handleDragOver'
       )
     }
 
@@ -213,24 +225,28 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumn }) {
           over,
           activeColumn,
           activeDraggingCardId,
-          activeDraggingCardData
+          activeDraggingCardData,
+          'handleDragEnd'
         )
-      } else {
+      } else { // kéo card trong column
 
         const oldIndexCard = oldColumnWhenDraggingCard?.cards.findIndex(c => c._id == activeDragItemId)
         const newIndexCard = overColumn?.cards.findIndex(c => c._id == over.id)
   
         const newOrderedCards = arrayMove(oldColumnWhenDraggingCard?.cards, oldIndexCard, newIndexCard)
-
+        const listCardId = newOrderedCards.map(x => x._id)
+        
         setOrderedColumns( prevColumns => {
           const nextColumns = cloneDeep(prevColumns) // clone danh sách các column
           const targetColumn = nextColumns.find(x => x._id === overColumn._id) // lấy column đang thao tác kéo các card
           // set lại các giá card và thứ tự
           targetColumn.cards = newOrderedCards
-          targetColumn.cardOrderIds = newOrderedCards.map(x => x._id)
+          targetColumn.cardOrderIds = listCardId
 
           return nextColumns
         })
+
+        moveCardSameColumn(newOrderedCards, listCardId, oldColumnWhenDraggingCard._id)
       }
 
     }

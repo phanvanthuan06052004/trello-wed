@@ -8,7 +8,7 @@ export const fetchBoarDetailsAPI = async (board) => {
 }
 
 // API xử lý update column sau xắp xếp
-export const updateBoarDetailsAPI = async (boardId, data) => {
+export const updateBoardDetailsAPI = async (boardId, data) => {
   const request = await axios.put(`${API_HOST}/v1/boards/${boardId}`, data)
   return request.data // Axios trả kết quả property của nó là data
 }
@@ -19,8 +19,20 @@ export const createNewColumnAPI = async (data) => {
   return request.data // Axios trả kết quả property của nó là data
 }
 
+// API update cardOrderIds
+export const updateColumnDetailsAPI = async (columnId, data) => {
+  const request = await axios.put(`${API_HOST}/v1/columns/${columnId}`, data)
+  return request.data // Axios trả kết quả property của nó là data
+}
+
 // API tạo card
 export const createNewCardAPI = async (data) => {
   const request = await axios.post(`${API_HOST}/v1/cards`, data)
+  return request.data // Axios trả kết quả property của nó là data
+}
+
+// API xử lí kéo card giữa các columns khác nhau
+export const moveCardDifferenceColumnAPI = async (data) => {
+  const request = await axios.put(`${API_HOST}/v1/boards/support/moveCardDifferenceColumn`, data)
   return request.data // Axios trả kết quả property của nó là data
 }
