@@ -3,7 +3,9 @@ import AppBar from '~/components/AppBar/AppBar'
 import BoardBar from './BoardBar/BoardBar'
 import BoardContent from './BoardContent/BoardContent'
 import { useEffect, useState } from 'react'
+import { isEmpty } from 'lodash'
 import { fetchBoarDetailsAPI, createNewCardAPI, createNewColumnAPI, updateBoardDetailsAPI, updateColumnDetailsAPI, moveCardDifferenceColumnAPI } from '~/Apis'
+import { generatePlaceholderCard } from '~/utils/formatters'
 function Board() {
 
   const [board, setBoard] = useState(null)
@@ -11,7 +13,17 @@ function Board() {
   useEffect(() => {
     const boardId = '67d3f92369d12e62beea8e16'
     fetchBoarDetailsAPI(boardId)
-      .then(board => setBoard(board))
+      .then(board => {
+        // kiểm tra các column nào vừa tạo mà không có card thì đặt card place holder
+        // Dành cho khi nhấn f5 trang nó mới load và kiểm tra
+        board.columns.forEach(column => {
+          if (isEmpty(column.cards)) {
+            column.cards = [generatePlaceholderCard(column)]
+            column.cardOrderIds = [generatePlaceholderCard(column)._id]
+          }
+        })
+        setBoard(board)
+      })
   }, [])
 
   const createNewColumn = async (data) => {
@@ -24,6 +36,11 @@ function Board() {
     const newBoard = { ...board }
     newBoard.columnOrderIds.push(result._id)
     newBoard.columns.push(result)
+    // tiến hành kiểm tra coi có placehokder nào không thì thêm 
+    if (isEmpty(newBoard.columns[newBoard.columns.length - 1].cards)) {
+      newBoard.columns[newBoard.columns.length - 1].cards = [generatePlaceholderCard(newBoard.columns[newBoard.columns.length - 1])]
+      newBoard.columns[newBoard.columns.length - 1].cardOrderIds = [generatePlaceholderCard(newBoard.columns[newBoard.columns.length - 1])._id]
+    }
     setBoard(newBoard)
   }
 
@@ -36,8 +53,15 @@ function Board() {
     const newBoard = { ...board }
     const columnToUpdate = newBoard.columns.find(Column => Column._id === result.columnId)
     if (columnToUpdate) {
-      columnToUpdate.cards.push(result)
-      columnToUpdate.cardOrderIds.push(result._id)
+      // xử lý còn dư FE_PlaceholderCard khi tạo mới card
+      if (columnToUpdate.cards.some(card => card.FE_PlaceholderCard)) {
+        columnToUpdate.cards = [result]
+        columnToUpdate.cardOrderIds = [result._id]
+      }
+      else { // tạo mới card và ko quan tâm tới FE_PlaceholderCard
+        columnToUpdate.cards.push(result)
+        columnToUpdate.cardOrderIds.push(result._id)
+      }
     }
     setBoard(newBoard)
   }
@@ -81,11 +105,16 @@ function Board() {
     newBoard.columns = dndOrderedColumns
     setBoard(newBoard)
 
+    // xử lý -FE-Placeholder-Card khi kéo hết card và cập nhật column củ
+    let prevCardOrderedIds = dndOrderedColumns.find(c => c._id === prevColumnId)?.cardOrderIds
+    if (prevCardOrderedIds[0].includes('-Placeholder-Card')) {
+      prevCardOrderedIds = []
+    }
     // call API to update
     moveCardDifferenceColumnAPI({
       dragCardId,
       prevColumnId,
-      prevCardOrderedIds: dndOrderedColumns.find(c => c._id === prevColumnId)?.cardOrderIds,
+      prevCardOrderedIds,
       nextColumnId,
       nextCardOrderedIds: dndOrderedColumns.find(c => c._id === nextColumnId)?.cardOrderIds
     })
