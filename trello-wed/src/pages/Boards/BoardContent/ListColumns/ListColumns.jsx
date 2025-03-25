@@ -6,7 +6,7 @@ import TextField from '@mui/material/TextField'
 import CloseIcon from '@mui/icons-material/Close'
 import { useState } from 'react'
 import { toast } from 'react-toastify'
-function ListColumns({ columns, createNewColumn, createNewCard }) {
+function ListColumns({ columns, createNewColumn, createNewCard, deleteColumnDetails }) {
 
   // Xử lí đóng mở button add new column
   const [openNewColumn, setOpenNewColumn] = useState(false)
@@ -47,7 +47,7 @@ function ListColumns({ columns, createNewColumn, createNewCard }) {
           }
         }}>
           {/* box column  */}
-          {columns.map((data) => <Column createNewCard={createNewCard} key={data._id} column={data}/>)}
+          {columns.map((data) => <Column deleteColumnDetails={deleteColumnDetails} createNewCard={createNewCard} key={data._id} column={data}/>)}
 
           {/* add new card */}
           { !openNewColumn ?

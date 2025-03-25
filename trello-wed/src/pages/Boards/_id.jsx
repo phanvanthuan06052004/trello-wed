@@ -4,14 +4,16 @@ import BoardBar from './BoardBar/BoardBar'
 import BoardContent from './BoardContent/BoardContent'
 import { useEffect, useState } from 'react'
 import { isEmpty } from 'lodash'
-import { fetchBoarDetailsAPI, createNewCardAPI, createNewColumnAPI, updateBoardDetailsAPI, updateColumnDetailsAPI, moveCardDifferenceColumnAPI } from '~/Apis'
+import { fetchBoarDetailsAPI, createNewCardAPI, createNewColumnAPI, updateBoardDetailsAPI, updateColumnDetailsAPI, moveCardDifferenceColumnAPI, deleteColumnDetailsAPI } from '~/Apis'
 import { generatePlaceholderCard } from '~/utils/formatters'
+import { useConfirm } from 'material-ui-confirm'
+import { toast } from 'react-toastify'
 function Board() {
 
   const [board, setBoard] = useState(null)
 
   useEffect(() => {
-    const boardId = '67d3f92369d12e62beea8e16'
+    const boardId = '67e23e3ef43f67ae0a1d8964'
     fetchBoarDetailsAPI(boardId)
       .then(board => {
         // kiểm tra các column nào vừa tạo mà không có card thì đặt card place holder
@@ -120,6 +122,17 @@ function Board() {
     })
   }
 
+  const deleteColumnDetails = async (columnId) => {
+    // làm mới sau khi xóa
+    const newBoard = { ...board }
+    newBoard.columnOrderIds = newBoard.columnOrderIds.filter(c => c !== columnId)
+    newBoard.columns = newBoard.columns.filter(c => c._id !== columnId)
+    setBoard(newBoard)
+    // call API xóa
+    deleteColumnDetailsAPI(columnId).then((result) => {
+      toast.success(`${result.result}`, { position: 'top-right' })
+    })
+  }
   return (
     <Container disableGutters maxWidth={false} sx={{ height: '100vh' }}>
       <AppBar />
@@ -131,6 +144,7 @@ function Board() {
         moveColumn={moveColumn}
         moveCardSameColumn={moveCardSameColumn}
         moveCardDifferenceColumn={moveCardDifferenceColumn}
+        deleteColumnDetails={deleteColumnDetails}
       />
     </Container>
   )

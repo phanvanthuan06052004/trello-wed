@@ -5,13 +5,21 @@ import CssBaseline from '@mui/material/CssBaseline' //đồng bồ css giữa c�
 import theme from './theme'
 import { Experimental_CssVarsProvider as CssVarsProvider } from '@mui/material/styles'
 import { ToastContainer } from 'react-toastify'
-
+import { ConfirmProvider } from 'material-ui-confirm'
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <CssVarsProvider theme={theme}>
-      <CssBaseline />
-      <App />
-      <ToastContainer />
+      <ConfirmProvider defaultOptions={{
+        allowClose: false,
+        dialogProps: { maxWidth: 'xs' },
+        cancellationButtonProps: { color: 'inherit' },
+        confirmationButtonProps: { color: 'secondary', variant: 'outlined'
+        }
+      }}>
+        <CssBaseline />
+        <App />
+        <ToastContainer />
+      </ConfirmProvider>
     </CssVarsProvider>
   </StrictMode>
 )
