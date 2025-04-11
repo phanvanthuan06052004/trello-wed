@@ -171,6 +171,7 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
               placement="bottom-start"
               transition
               disablePortal
+              style={{ zIndex: 1300 }}
             >
               {({ TransitionProps, placement }) => (
                 <Grow
@@ -254,8 +255,8 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
         }}>
           {!openNewCard ?
             <Box onClick={toggleOpenNewCardForm} sx={{ height: '100%', display:'flex', justifyContent: 'space-between', alignItems:'center' }}>
-              <Button startIcon={ <AddCardIcon/> }>
-                  Add new Card
+              <Button startIcon={<AddCardIcon />} sx={{ zIndex: 1 }}>
+                Add new Card
               </Button>
               <Tooltip title="Drag to move">
                 <DragHandleIcon sx={{ cursor: 'pointer' }}/>
