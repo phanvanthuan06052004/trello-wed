@@ -2,79 +2,35 @@ import Container from '@mui/material/Container'
 import AppBar from '~/components/AppBar/AppBar'
 import BoardBar from './BoardBar/BoardBar'
 import BoardContent from './BoardContent/BoardContent'
-import { useEffect, useState } from 'react'
-import { isEmpty } from 'lodash'
-import { fetchBoarDetailsAPI, createNewCardAPI, createNewColumnAPI, updateBoardDetailsAPI, updateColumnDetailsAPI, moveCardDifferenceColumnAPI, deleteColumnDetailsAPI } from '~/Apis'
+import { useEffect } from 'react'
+import { isEmpty, cloneDeep } from 'lodash'
+import { createNewCardAPI, createNewColumnAPI, updateBoardDetailsAPI, updateColumnDetailsAPI, moveCardDifferenceColumnAPI, deleteColumnDetailsAPI } from '~/Apis'
 import { generatePlaceholderCard } from '~/utils/formatters'
 import { useConfirm } from 'material-ui-confirm'
 import { toast } from 'react-toastify'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchBoardDetailsAPI, selectCurrentActiveBoard, updateCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
 function Board() {
-
-  const [board, setBoard] = useState(null)
+  const dispatch = useDispatch()
+  const board = useSelector(selectCurrentActiveBoard) // lấy data từ redux
 
   useEffect(() => {
     const boardId = '67e23e3ef43f67ae0a1d8964'
-    fetchBoarDetailsAPI(boardId)
-      .then(board => {
-        // kiểm tra các column nào vừa tạo mà không có card thì đặt card place holder
-        // Dành cho khi nhấn f5 trang nó mới load và kiểm tra
-        board.columns.forEach(column => {
-          if (isEmpty(column.cards)) {
-            column.cards = [generatePlaceholderCard(column)]
-            column.cardOrderIds = [generatePlaceholderCard(column)._id]
-          }
-        })
-        setBoard(board)
-      })
-  }, [])
+    dispatch(fetchBoardDetailsAPI(boardId))
+  }, [dispatch])
 
-  const createNewColumn = async (data) => {
-    const result = await createNewColumnAPI({
-      ...data,
-      boardId: board._id
-    })
 
-    // refet lại data
-    const newBoard = { ...board }
-    newBoard.columnOrderIds.push(result._id)
-    newBoard.columns.push(result)
-    // tiến hành kiểm tra coi có placehokder nào không thì thêm 
-    if (isEmpty(newBoard.columns[newBoard.columns.length - 1].cards)) {
-      newBoard.columns[newBoard.columns.length - 1].cards = [generatePlaceholderCard(newBoard.columns[newBoard.columns.length - 1])]
-      newBoard.columns[newBoard.columns.length - 1].cardOrderIds = [generatePlaceholderCard(newBoard.columns[newBoard.columns.length - 1])._id]
-    }
-    setBoard(newBoard)
-  }
-
-  const createNewCard = async (data) => {
-    const result = await createNewCardAPI({
-      ...data,
-      boardId: board._id
-    })
-
-    const newBoard = { ...board }
-    const columnToUpdate = newBoard.columns.find(Column => Column._id === result.columnId)
-    if (columnToUpdate) {
-      // xử lý còn dư FE_PlaceholderCard khi tạo mới card
-      if (columnToUpdate.cards.some(card => card.FE_PlaceholderCard)) {
-        columnToUpdate.cards = [result]
-        columnToUpdate.cardOrderIds = [result._id]
-      }
-      else { // tạo mới card và ko quan tâm tới FE_PlaceholderCard
-        columnToUpdate.cards.push(result)
-        columnToUpdate.cardOrderIds.push(result._id)
-      }
-    }
-    setBoard(newBoard)
-  }
 
   const moveColumn = async (newOrderedColumns) => {
     const orderedColumn = newOrderedColumns.map(c => c._id)
 
+    /**
+     * Trường hợp này thì không sao nó không phải push vào làm thay đổi mà là gán lại toàn bộ giá trị 
+     */
     const newBoard = { ...board }
     newBoard.columnOrderIds = orderedColumn
     newBoard.columns = newOrderedColumns
-    setBoard(newBoard)
+    dispatch(updateCurrentActiveBoard(newBoard))
 
     await updateBoardDetailsAPI(board._id, {
       columnOrderIds: orderedColumn
@@ -83,14 +39,19 @@ function Board() {
 
   const moveCardSameColumn = async (listCard, listCardId, columnId) => {
 
+    /**
+     * trường hợp này vi phạm vì nó phải can thiệp sâu vào dữ liệu
+     * error: Cannot assign to read only property 'card' of object
+     */
     // handle refresh page
-    const newBoard = { ...board }
+    // const newBoard = { ...board }
+    const newBoard = cloneDeep(board)
     const columnToUpdate = newBoard.columns.find(Column => Column._id === columnId)
     if (columnToUpdate) {
       columnToUpdate.cards = listCard
       columnToUpdate.cardOrderIds = listCardId
     }
-    setBoard(newBoard)
+    dispatch(updateCurrentActiveBoard(newBoard))
 
     // call API to update
     updateColumnDetailsAPI(columnId, {
@@ -105,7 +66,7 @@ function Board() {
     const newBoard = { ...board }
     newBoard.columnOrderIds = nextColumnOrderIds
     newBoard.columns = dndOrderedColumns
-    setBoard(newBoard)
+    dispatch(updateCurrentActiveBoard(newBoard))
 
     // xử lý -FE-Placeholder-Card khi kéo hết card và cập nhật column củ
     let prevCardOrderedIds = dndOrderedColumns.find(c => c._id === prevColumnId)?.cardOrderIds
@@ -123,28 +84,18 @@ function Board() {
   }
 
   const deleteColumnDetails = async (columnId) => {
-    // làm mới sau khi xóa
-    const newBoard = { ...board }
-    newBoard.columnOrderIds = newBoard.columnOrderIds.filter(c => c !== columnId)
-    newBoard.columns = newBoard.columns.filter(c => c._id !== columnId)
-    setBoard(newBoard)
-    // call API xóa
-    deleteColumnDetailsAPI(columnId).then((result) => {
-      toast.success(`${result.result}`, { position: 'top-right' })
-    })
+    
   }
   return (
     <Container disableGutters maxWidth={false} sx={{ height: '100vh' }}>
       <AppBar />
       <BoardBar board={board}/>
       <BoardContent
-        createNewCard={createNewCard}
-        createNewColumn={createNewColumn}
+
         board={board}
         moveColumn={moveColumn}
         moveCardSameColumn={moveCardSameColumn}
         moveCardDifferenceColumn={moveCardDifferenceColumn}
-        deleteColumnDetails={deleteColumnDetails}
       />
     </Container>
   )

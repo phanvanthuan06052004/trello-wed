@@ -6,8 +6,14 @@ import TextField from '@mui/material/TextField'
 import CloseIcon from '@mui/icons-material/Close'
 import { useState } from 'react'
 import { toast } from 'react-toastify'
-function ListColumns({ columns, createNewColumn, createNewCard, deleteColumnDetails }) {
-
+import { createNewColumnAPI } from '~/Apis'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectCurrentActiveBoard, updateCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
+import { cloneDeep, isEmpty } from 'lodash'
+import { generatePlaceholderCard } from '~/utils/formatters'
+function ListColumns({ columns }) {
+  const dispatch = useDispatch()
+  const board = useSelector(selectCurrentActiveBoard)
   // Xử lí đóng mở button add new column
   const [openNewColumn, setOpenNewColumn] = useState(false)
   const toggleOpenNewColumnForm = () => {
@@ -27,7 +33,28 @@ function ListColumns({ columns, createNewColumn, createNewCard, deleteColumnDeta
       title: newTitle
     }
     // Gọi API tạo column
-    await createNewColumn(newColumn)
+    const result = await createNewColumnAPI({
+      ...newColumn,
+      boardId: board._id
+    })
+
+    /**
+     * Đoạn này sẽ dính lỗi object is not extensible bởi dù đã copy/clone ra giá trị newBoard nhưng bản chất
+     * của spread operator là Shallow copy/Clone, nên dính phải rules Immutablility trong redux tookit không
+     * dùng được hàm PUSH (sửa giá trị mảng trực tiếp), nên dùng Deep Copy cho lẹ
+     * thường hay dùng nữa là Concat để ghép mảng
+     */
+    // refet lại data
+    // const newBoard = { ...board }
+    const newBoard = cloneDeep(board)
+    newBoard.columnOrderIds.push(result._id)
+    newBoard.columns.push(result)
+    // tiến hành kiểm tra coi có placehokder nào không thì thêm
+    if (isEmpty(newBoard.columns[newBoard.columns.length - 1].cards)) {
+      newBoard.columns[newBoard.columns.length - 1].cards = [generatePlaceholderCard(newBoard.columns[newBoard.columns.length - 1])]
+      newBoard.columns[newBoard.columns.length - 1].cardOrderIds = [generatePlaceholderCard(newBoard.columns[newBoard.columns.length - 1])._id]
+    }
+    dispatch(updateCurrentActiveBoard(newBoard))
 
     setNewTitle('')
     toggleOpenNewColumnForm()
@@ -47,7 +74,7 @@ function ListColumns({ columns, createNewColumn, createNewCard, deleteColumnDeta
           }
         }}>
           {/* box column  */}
-          {columns.map((data) => <Column deleteColumnDetails={deleteColumnDetails} createNewCard={createNewCard} key={data._id} column={data}/>)}
+          {columns.map((data) => <Column key={data._id} column={data}/>)}
 
           {/* add new card */}
           { !openNewColumn ?
