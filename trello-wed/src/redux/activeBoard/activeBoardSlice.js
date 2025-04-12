@@ -3,6 +3,7 @@ import axios from 'axios'
 import { isEmpty } from 'lodash'
 import { API_HOST } from '~/utils/Constants'
 import { generatePlaceholderCard } from '~/utils/formatters'
+import { mapOrder } from '~/utils/Sort'
 
 const initialState = {
   currentActiveBoard: null
@@ -39,6 +40,9 @@ export const activeBoardSlice = createSlice({
         if (isEmpty(column.cards)) {
           column.cards = [generatePlaceholderCard(column)]
           column.cardOrderIds = [generatePlaceholderCard(column)._id]
+        } else {
+          // sắp xếp thứ tự các card luôn ở đây trước khi đưa xuống component con
+          column.cards = mapOrder(column.cards, column.cardOrderIds, '_id')
         }
       })
       state.currentActiveBoard = board

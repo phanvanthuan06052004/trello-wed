@@ -27,12 +27,18 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { toast } from 'react-toastify'
 import { useConfirm } from 'material-ui-confirm'
+import { createNewCardAPI, deleteColumnDetailsAPI } from '~/Apis'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectCurrentActiveBoard, updateCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
+import { cloneDeep } from 'lodash'
 
 const COLUMN_WIDTH = '300px'
 const COLUMN_HEADER_HEIGHT = '50px'
 const COLUMN_FOOTER_HEIGHT = '56px'
 
-function Column({ column, createNewCard, deleteColumnDetails }) {
+function Column({ column }) {
+  const dispatch = useDispatch()
+  const board = useSelector(selectCurrentActiveBoard) 
   // Xử lí đóng mở button add new card
   const [openNewCard, setOpenNewCard] = useState(false)
   const toggleOpenNewCardForm = () => {
@@ -54,7 +60,27 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
     }
 
     // gọi API tạo card
-    await createNewCard(newCardData)
+    const result = await createNewCardAPI({
+      ...newCardData,
+      boardId: board._id
+    })
+
+    // const newBoard = { ...board }
+    const newBoard = cloneDeep(board)
+    const columnToUpdate = newBoard.columns.find(Column => Column._id === result.columnId)
+    if (columnToUpdate) {
+      // xử lý còn dư FE_PlaceholderCard khi tạo mới card
+      if (columnToUpdate.cards.some(card => card.FE_PlaceholderCard)) {
+        columnToUpdate.cards = [result]
+        columnToUpdate.cardOrderIds = [result._id]
+      }
+      else { // tạo mới card và ko quan tâm tới FE_PlaceholderCard
+        columnToUpdate.cards.push(result)
+        columnToUpdate.cardOrderIds.push(result._id)
+      }
+    }
+    dispatch(updateCurrentActiveBoard(newBoard))
+
     setNewTitle('')
     toggleOpenNewCardForm()
   }
@@ -122,7 +148,15 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
       cancellationText: 'Cancel'
 
     }).then(() => {
-      deleteColumnDetails(column._id)
+      // làm mới sau khi xóa
+      const newBoard = { ...board }
+      newBoard.columnOrderIds = newBoard.columnOrderIds.filter(c => c !== column._id)
+      newBoard.columns = newBoard.columns.filter(c => c._id !== column._id)
+      dispatch(updateCurrentActiveBoard(newBoard))
+      // call API xóa
+      deleteColumnDetailsAPI(column._id).then((result) => {
+        toast.success(`${result.result}`, { position: 'top-right' })
+      })
     }).catch(() => {})
   }
   return (
