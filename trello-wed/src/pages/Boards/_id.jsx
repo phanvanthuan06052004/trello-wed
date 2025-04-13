@@ -3,21 +3,19 @@ import AppBar from '~/components/AppBar/AppBar'
 import BoardBar from './BoardBar/BoardBar'
 import BoardContent from './BoardContent/BoardContent'
 import { useEffect } from 'react'
-import { isEmpty, cloneDeep } from 'lodash'
-import { createNewCardAPI, createNewColumnAPI, updateBoardDetailsAPI, updateColumnDetailsAPI, moveCardDifferenceColumnAPI, deleteColumnDetailsAPI } from '~/Apis'
-import { generatePlaceholderCard } from '~/utils/formatters'
-import { useConfirm } from 'material-ui-confirm'
-import { toast } from 'react-toastify'
+import { cloneDeep } from 'lodash'
+import { updateBoardDetailsAPI, updateColumnDetailsAPI, moveCardDifferenceColumnAPI } from '~/Apis'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchBoardDetailsAPI, selectCurrentActiveBoard, updateCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
+import { useParams } from 'react-router-dom'
 function Board() {
+  const { boardId } = useParams()
   const dispatch = useDispatch()
   const board = useSelector(selectCurrentActiveBoard) // lấy data từ redux
-
+  // const boardId = '67e23e3ef43f67ae0a1d8964'
   useEffect(() => {
-    const boardId = '67e23e3ef43f67ae0a1d8964'
     dispatch(fetchBoardDetailsAPI(boardId))
-  }, [dispatch])
+  }, [dispatch, boardId])
 
 
 
@@ -84,12 +82,12 @@ function Board() {
   }
 
   const deleteColumnDetails = async (columnId) => {
-    
+
   }
   return (
     <Container disableGutters maxWidth={false} sx={{ height: '100vh' }}>
       <AppBar />
-      <BoardBar board={board}/>
+      <BoardBar board={board} />
       <BoardContent
 
         board={board}
