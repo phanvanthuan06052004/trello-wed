@@ -130,7 +130,7 @@ function ListColumns({ columns }) {
                 alignItems: 'center',
                 gap: 1
               }}>
-                <Button onClick={addNewColumn} variant='contained' size='small' color='success'
+                <Button onClick={addNewColumn} variant='contained' size='small' color='success' className='interceptor-loading'
                   sx={{
                     boxShadow: 'none',
                     border: '0.5px solid',
