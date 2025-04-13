@@ -334,7 +334,7 @@ function Column({ column }) {
                 alignItems: 'center',
                 gap: 1
               }}>
-                <Button onClick={addNewCard} variant='contained' size='small' color='success'
+                <Button onClick={addNewCard} variant='contained' size='small' color='success' className='interceptor-loading'
                   sx={{
                     boxShadow: 'none',
                     border: '0.5px solid',
