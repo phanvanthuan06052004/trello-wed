@@ -2,7 +2,7 @@ import { Box } from '@mui/material'
 import ModeSelect from '../ModeSelect/ModeSelect'
 import AppsIcon from '@mui/icons-material/Apps'
 import SvgIcon from '@mui/material/SvgIcon'
-import { ReactComponent as TrelloIcon } from '~/assets/trello.svg'
+import TrelloIcon from '~/assets/trello.svg?react'
 import Typography from '@mui/material/Typography'
 import Workspace from './Menus/Workspaces'
 import Recent from './Menus/Recent'
@@ -31,13 +31,13 @@ function AppBar() {
         justifyContent: 'space-between',
         px: 2,
         overflowX: 'auto',
-        bgcolor: ( theme ) => (theme.palette.mode === 'light' ? '#01579b' : '#2c3e50')
+        bgcolor: (theme) => (theme.palette.mode === 'light' ? '#01579b' : '#2c3e50')
       }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mr: 2 }}>
-          <AppsIcon sx={{ color: 'white' }}/>
+          <AppsIcon sx={{ color: 'white' }} />
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-            <SvgIcon component={TrelloIcon} inheritViewBox fontSize="small" sx={{ color: 'white' }}/>
-            <Typography variant="span" sx={{ fontSize: '1.1rem', fontWeight:'bold', color:'white' }}>
+            <SvgIcon component={TrelloIcon} inheritViewBox fontSize="small" sx={{ color: 'white' }} />
+            <Typography variant="span" sx={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'white' }}>
               Trello
             </Typography>
           </Box>
@@ -48,7 +48,7 @@ function AppBar() {
             <Templates />
             <Button
               variant="outlined"
-              startIcon={ <AddToPhotosIcon/>}
+              startIcon={<AddToPhotosIcon />}
               sx={{ color: 'white', border: 'none' }}
             >
               Create
@@ -70,7 +70,7 @@ function AppBar() {
               'label.Mui-focused': { color: 'white' },
               'input': { color: 'white' },
               'border': { color: 'white' },
-              '.MuiOutlinedInput-root':{
+              '.MuiOutlinedInput-root': {
                 '& fieldset': { borderColor: 'white' },
                 '&.Mui-focused fieldset': { borderColor: 'white' },
                 '&:hover fieldset': { borderColor: 'white' }
@@ -103,11 +103,11 @@ function AppBar() {
           <ModeSelect />
           <Badge color="error" variant="dot" sx={{ cursor: 'pointer' }}>
             <Tooltip title="informations">
-              <NotificationsNoneIcon sx={{ color: 'white' }}/>
+              <NotificationsNoneIcon sx={{ color: 'white' }} />
             </Tooltip>
           </Badge>
           <Tooltip title="help" sx={{ cursor: 'pointer' }}>
-            <HelpOutlineIcon sx={{ color: 'white' }}/>
+            <HelpOutlineIcon sx={{ color: 'white' }} />
           </Tooltip>
           <Profile />
         </Box>
