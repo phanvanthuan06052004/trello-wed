@@ -1,5 +1,6 @@
 import authorizeAxiosInstance from '~/utils/authorizeAxios'
 import { API_HOST } from '~/utils/Constants'
+import { toast } from 'react-toastify'
 
 // API board
 // export const fetchBoarDetailsAPI = async (board) => {
@@ -32,5 +33,17 @@ export const createNewCardAPI = async (data) => {
 }
 export const moveCardDifferenceColumnAPI = async (data) => {
   const request = await authorizeAxiosInstance.put(`${API_HOST}/v1/boards/support/moveCardDifferenceColumn`, data)
+  return request.data // Axios trả kết quả property của nó là data
+}
+
+// API user
+export const registerUserAPI = async (data) => {
+  const request = await authorizeAxiosInstance.post(`${API_HOST}/v1/users/register`, data)
+  toast.success('Register successfully! Please check and verify your email before login!', { theme: 'colored' })
+  return request.data
+}
+export const verifyUserAPI = async (data) => {
+  const request = await authorizeAxiosInstance.post(`${API_HOST}/v1/users/verify`, data)
+  toast.success('Verify successfully! Please login to continue!', { theme: 'colored' })
   return request.data // Axios trả kết quả property của nó là data
 }

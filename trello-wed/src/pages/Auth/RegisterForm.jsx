@@ -1,5 +1,5 @@
 // TrungQuanDev: https://youtube.com/@trungquandev
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Avatar from '@mui/material/Avatar'
@@ -13,8 +13,11 @@ import Zoom from '@mui/material/Zoom'
 import { useForm } from 'react-hook-form'
 import { EMAIL_RULE, EMAIL_RULE_MESSAGE, FIELD_REQUIRED_MESSAGE, PASSWORD_RULE, PASSWORD_RULE_MESSAGE } from '~/utils/validators'
 import FieldErrorAlert from '~/components/Form/FieldErrorAlert'
+import { toast } from 'react-toastify'
+import { registerUserAPI } from '~/Apis'
 
 function RegisterForm() {
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -23,7 +26,8 @@ function RegisterForm() {
   } = useForm()
 
   const submitRegister = (data) => {
-    console.log('🚀 ~ submitRegister ~ data:', data)
+    const { email, password } = data
+    toast.promise(registerUserAPI({ email, password }), { pending: 'Registering...' }).then(user => navigate(`/login?registeredEmail=${user.email}`))
   }
   return (
     <form onSubmit={handleSubmit(submitRegister)}>
