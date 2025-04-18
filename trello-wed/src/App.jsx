@@ -2,6 +2,7 @@ import Board from './pages/Boards/_id'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import NotFound from './pages/404/NotFound'
 import Auth from './pages/Auth/Auth'
+import AccountVerification from './pages/Auth/AccountVerification'
 function App() {
 
   return (
@@ -14,6 +15,11 @@ function App() {
       {/*Authentication */}
       <Route path='/login' element={<Auth />} />
       <Route path='/register' element={<Auth />} />
+
+      {/*Account verification*/}
+      <Route path='/account/verification' element={<AccountVerification />} />
+
+      {/*Board*/}
 
       {/*các trường hợp route không hợp lệ nó sẽ nhảy xuống đây*/}
       <Route path='*' element={<NotFound />} />

@@ -8,6 +8,7 @@ import { updateBoardDetailsAPI, updateColumnDetailsAPI, moveCardDifferenceColumn
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchBoardDetailsAPI, selectCurrentActiveBoard, updateCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
 import { useParams } from 'react-router-dom'
+import PageLoadingSpinner from '~/components/Loading/PageLoadingSpinner'
 function Board() {
   const { boardId } = useParams()
   const dispatch = useDispatch()
@@ -81,8 +82,8 @@ function Board() {
     })
   }
 
-  const deleteColumnDetails = async (columnId) => {
-
+  if (!board) {
+    return <PageLoadingSpinner caption='Loading ....'/>
   }
   return (
     <Container disableGutters maxWidth={false} sx={{ height: '100vh' }}>
