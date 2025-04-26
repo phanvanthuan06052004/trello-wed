@@ -1,9 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import authorizeAxiosInstance from '~/utils/authorizeAxios'
-import { isEmpty } from 'lodash'
 import { API_HOST } from '~/utils/Constants'
-import { generatePlaceholderCard } from '~/utils/formatters'
-import { mapOrder } from '~/utils/Sort'
 
 const initialState = {
   currentUser: null
@@ -14,7 +11,7 @@ const initialState = {
 export const loginUserAPI = createAsyncThunk(
   'user/loginUserAPI',
   async (data) => {
-    const request = await authorizeAxiosInstance.get(`${API_HOST}/v1/users/login`, data)
+    const request = await authorizeAxiosInstance.post(`${API_HOST}/v1/users/login`, data)
     return request.data // Axios trả kết quả property của nó là data
   }
 )
@@ -27,7 +24,7 @@ export const userSlice = createSlice({
   // ExtraReducers: Nơi xử lý dữ liệu bất đồng bộ
   extraReducers: (builder) => {
     builder.addCase(loginUserAPI.fulfilled, (state, action) => {
-      state.currentActiveBoard = action.payload // action lấy từ fetAPI data ở trên trả về
+      state.currentUser = action.payload // action lấy từ fetAPI data ở trên trả về
     })
   }
 })
