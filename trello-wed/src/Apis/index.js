@@ -47,3 +47,7 @@ export const verifyUserAPI = async (data) => {
   toast.success('Verify successfully! Please login to continue!', { theme: 'colored' })
   return request.data // Axios trả kết quả property của nó là data
 }
+export const refreshTokenAPI = async () => {
+  const request = await authorizeAxiosInstance.post(`${API_HOST}/v1/users/refresh-token`)
+  return request.data // Axios trả kết quả property của nó là data
+}

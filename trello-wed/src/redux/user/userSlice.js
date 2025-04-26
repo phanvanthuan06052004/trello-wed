@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { toast } from 'react-toastify'
 import authorizeAxiosInstance from '~/utils/authorizeAxios'
 import { API_HOST } from '~/utils/Constants'
 
@@ -16,6 +17,17 @@ export const loginUserAPI = createAsyncThunk(
   }
 )
 
+export const logoutUserAPI = createAsyncThunk(
+  'user/logoutUserAPI',
+  async (showSuccessMessage = true) => {
+    const response = await authorizeAxiosInstance.post(`${API_HOST}/v1/users/logout`)
+    if (showSuccessMessage) {
+      toast.success('Logout successfully!')
+    }
+    return response.data // Axios trả kết quả property của nó là data
+  }
+)
+
 export const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -25,6 +37,11 @@ export const userSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(loginUserAPI.fulfilled, (state, action) => {
       state.currentUser = action.payload // action lấy từ fetAPI data ở trên trả về
+    })
+    builder.addCase(logoutUserAPI.fulfilled, (state, action) => {
+      // api logout thành công thì xóa currentUser trong redux
+      // kết hợp với protectedRoute code sẽ điều hướng về trang login khi user = null
+      state.currentUser = null
     })
   }
 })
