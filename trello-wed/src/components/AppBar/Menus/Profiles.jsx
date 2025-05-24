@@ -13,6 +13,7 @@ import Logout from '@mui/icons-material/Logout'
 import { useDispatch, useSelector } from 'react-redux'
 import { logoutUserAPI, selectCurrentUser } from '~/redux/user/userSlice'
 import { useConfirm } from 'material-ui-confirm'
+import { Link } from 'react-router-dom'
 export default function Profile() {
   const [anchorEl, setAnchorEl] = React.useState(null)
   const dispatch = useDispatch()
@@ -94,11 +95,13 @@ export default function Profile() {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem onClick={handleClose} sx={{
-          '&:hover': { color:'success.light' }
-        }}>
-          <Avatar /> Profile
-        </MenuItem>
+        <Link to="/settings/account" >
+          <MenuItem onClick={handleClose} sx={{
+            '&:hover': { color:'success.light' }
+          }}>
+            <Avatar /> Profile
+          </MenuItem>
+        </Link>
         <Divider />
         <MenuItem onClick={handleClose}>
           <ListItemIcon>

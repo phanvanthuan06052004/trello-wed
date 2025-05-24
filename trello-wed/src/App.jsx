@@ -5,7 +5,7 @@ import Auth from './pages/Auth/Auth'
 import AccountVerification from './pages/Auth/AccountVerification'
 import { useSelector } from 'react-redux'
 import { selectCurrentUser } from '~/redux/user/userSlice'
-
+import Settings from './pages/Settings/Settings'
 // Giải pháp clean Code trong việc xác định toute nào cần đăng nhập xác thực 
 // Sử dụng Outlet để hiển thị các Child Route
 const ProtectRoutes = ({ user }) => {
@@ -27,6 +27,11 @@ function App() {
       {/*Authentication */}
       <Route path='/login' element={<Auth />} />
       <Route path='/register' element={<Auth />} />
+
+
+      {/*Settings */}
+      <Route path='/settings/account' element={<Settings />} />
+      <Route path='/settings/security' element={<Settings />} />
 
       {/*Account verification*/}
       <Route path='/account/verification' element={<AccountVerification />} />
