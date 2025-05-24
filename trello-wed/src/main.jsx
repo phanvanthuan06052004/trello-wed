@@ -5,6 +5,7 @@ import theme from './theme'
 import { Experimental_CssVarsProvider as CssVarsProvider } from '@mui/material/styles'
 import { ToastContainer } from 'react-toastify'
 import { ConfirmProvider } from 'material-ui-confirm'
+import { GlobalStyles } from '@mui/material';
 
 // Cấu hình redux
 import { store } from './redux/Store'
@@ -35,6 +36,7 @@ createRoot(document.getElementById('root')).render(
               color: 'secondary', variant: 'outlined'
             }
           }}>
+            <GlobalStyles styles={{ a: { textDecoration: 'none' } }}/>
             <CssBaseline />
             <App />
             <ToastContainer />
