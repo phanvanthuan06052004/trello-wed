@@ -1,4 +1,5 @@
 import { experimental_extendTheme as extendTheme } from '@mui/material/styles'
+import { teal, deepOrange, cyan, orange, purple, pink } from '@mui/material/colors'
 const APP_BAR_HEIGHT = '60px'
 const BOARD_BAR_HEIGHT = '68px'
 const BOARD_CONTENT_HEIGHT = `calc(100vh - ${APP_BAR_HEIGHT} - ${BOARD_BAR_HEIGHT})`
@@ -10,18 +11,18 @@ const theme = extendTheme({
     boardContentHeight: BOARD_CONTENT_HEIGHT
   },
   colorSchemes: { //set up for mode
-    // light: {
-    //   palette: {
-    //     primary: teal,
-    //     secondary: deepOrange
-    //   }
-    // },
-    // dark: {
-    //   palette: {
-    //     primary: cyan,
-    //     secondary: orange
-    //   }
-    // }
+    light: {
+      palette: {
+        primary: purple,
+        secondary: pink
+      }
+    },
+    dark: {
+      palette: {
+        primary: cyan,
+        secondary: orange
+      }
+    }
   },
   components: {
     MuiCssBaseline:{
