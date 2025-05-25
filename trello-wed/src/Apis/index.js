@@ -51,3 +51,9 @@ export const refreshTokenAPI = async () => {
   const request = await authorizeAxiosInstance.post(`${API_HOST}/v1/users/refresh-token`)
   return request.data // Axios trả kết quả property của nó là data
 }
+
+// API board
+export const fetchBoardsAPI = async (searchBoard) => {
+  const request = await authorizeAxiosInstance.get(`${API_HOST}/v1/boards${searchBoard}`)
+  return request.data
+}

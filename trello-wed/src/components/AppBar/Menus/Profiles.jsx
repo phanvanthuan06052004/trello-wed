@@ -54,7 +54,7 @@ export default function Profile() {
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
           >
-            <Avatar sx={{ width: 32, height: 32 }} src={currentUser?.images} />
+            <Avatar sx={{ width: 32, height: 32 }} src={currentUser?.avatar} />
           </IconButton>
         </Tooltip>
       </Box>
@@ -99,7 +99,7 @@ export default function Profile() {
           <MenuItem onClick={handleClose} sx={{
             '&:hover': { color:'success.light' }
           }}>
-            <Avatar /> Profile
+            <Avatar sx={{ width: 32, height: 32 }} src={currentUser?.avatar} /> Profile
           </MenuItem>
         </Link>
         <Divider />
