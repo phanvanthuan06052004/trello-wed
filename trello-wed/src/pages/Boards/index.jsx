@@ -46,9 +46,14 @@ const SidebarItem = styled(Box)(({ theme }) => ({
 function Boards() {
   // Số lượng bản ghi boards hiển thị tối đa trên 1 page tùy dự án (thường sẽ là 12 cái)
   const [boards, setBoards] = useState(null)
+
   // Tổng toàn bộ số lượng bản ghi boards có trong Database mà phía BE trả về để FE dùng tính toán phân trang
   const [totalBoards, setTotalBoards] = useState(null)
 
+  const setBoardAfterFetch = (res) => {
+    setBoards(res.boards)
+    setTotalBoards(res.totalBoards)
+  }
   // Xử lý phân trang từ url với MUI: https://mui.com/material-ui/react-pagination/#router-integration
   const location = useLocation()
   /**
@@ -63,23 +68,19 @@ function Boards() {
   const page = parseInt(query.get('page') || '1', 10)
 
   useEffect(() => {
-    // Fake tạm 16 cái item thay cho boards
-    // [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-    // setBoards([...Array(16)].map((_, i) => i))
-    // Fake tạm giả sử trong Database trả về có tổng 100 bản ghi boards
-    // setTotalBoards(100)
-
     // Gọi API lấy danh sách boards ở đây...
-    fetchBoardsAPI(location.search).then((res) => {
-      // res.boards là mảng boards trả về từ BE
-      setBoards(res.boards)
-      // res.totalBoards là tổng số lượng boards trong Database trả về từ BE
-      setTotalBoards(res.totalBoards)
-    }).catch((error) => {
+    fetchBoardsAPI(location.search).then(setBoardAfterFetch).catch((error) => {
       console.error('Error fetching boards:', error)
       toast.error('Failed to fetch boards. Please try again later.')
     })
   }, [location.search])
+
+  const reloadPage = () => {
+    fetchBoardsAPI(location.search).then(setBoardAfterFetch).catch((error) => {
+      console.error('Error fetching boards:', error)
+      toast.error('Failed to fetch boards. Please try again later.')
+    })
+  }
 
   // Lúc chưa tồn tại boards > đang chờ gọi api thì hiện loading
   if (!boards) {
@@ -108,7 +109,7 @@ function Boards() {
             </Stack>
             <Divider sx={{ my: 1 }} />
             <Stack direction="column" spacing={1}>
-              <SidebarCreateBoardModal />
+              <SidebarCreateBoardModal reloadPage={reloadPage}/>
             </Stack>
           </Grid>
 
