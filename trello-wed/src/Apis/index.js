@@ -57,3 +57,8 @@ export const fetchBoardsAPI = async (searchBoard) => {
   const request = await authorizeAxiosInstance.get(`${API_HOST}/v1/boards${searchBoard}`)
   return request.data
 }
+export const createNewBoardAPI = async (data) => {
+  const request = await authorizeAxiosInstance.post(`${API_HOST}/v1/boards`, data)
+  toast.success('Create new board successfully!', { theme: 'colored' })
+  return request.data // Axios trả kết quả property của nó là data
+}

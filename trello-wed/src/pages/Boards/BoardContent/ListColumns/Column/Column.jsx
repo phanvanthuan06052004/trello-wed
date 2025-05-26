@@ -1,5 +1,4 @@
 import { Box, Button } from '@mui/material'
-import Typography from '@mui/material/Typography'
 import AddCardIcon from '@mui/icons-material/AddCard'
 import ClickAwayListener from '@mui/material/ClickAwayListener'
 import Grow from '@mui/material/Grow'
@@ -27,10 +26,11 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { toast } from 'react-toastify'
 import { useConfirm } from 'material-ui-confirm'
-import { createNewCardAPI, deleteColumnDetailsAPI } from '~/Apis'
+import { createNewCardAPI, deleteColumnDetailsAPI, updateColumnDetailsAPI } from '~/Apis'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectCurrentActiveBoard, updateCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
 import { cloneDeep } from 'lodash'
+import ToggleFocusInput from '~/components/Form/ToggleFocusInput'
 
 const COLUMN_WIDTH = '300px'
 const COLUMN_HEADER_HEIGHT = '50px'
@@ -159,6 +159,16 @@ function Column({ column }) {
       })
     }).catch(() => {})
   }
+
+  const onChangeUpdateTitle = (newTitle) => {
+    // call API to update
+    updateColumnDetailsAPI(column._id, { title: newTitle }).then(() => {
+      const newBoard = cloneDeep(board)
+      const columnToUpdate = newBoard.columns.find(c => c._id === column._id)
+      if (columnToUpdate) columnToUpdate.title = newTitle
+      dispatch(updateCurrentActiveBoard(newBoard))
+    })
+  }
   return (
     <div ref={setNodeRef} style={dndStyleColumn} {...attributes}>
       <Box
@@ -180,13 +190,10 @@ function Column({ column }) {
           alignItems: 'center',
           p: 2
         }}>
-          <Typography variant='h5' sx={{
-            fontWeight: 'bold',
-            cursor: 'pointer'
-          }}>
-            {column?.title}
-          </Typography>
-
+          <ToggleFocusInput
+            value={column?.title}
+            onChangedValue={onChangeUpdateTitle}
+          />
           <>
             <KeyboardArrowDownIcon
               ref={anchorRef}
