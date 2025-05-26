@@ -11,6 +11,7 @@ import Button from '@mui/material/Button'
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt'
 import { capitalizeFirstLetter } from '~/utils/formatters'
 import Tooltip from '@mui/material/Tooltip'
+import BoardUserGroup from './BoardUserGroup'
 const BOARD_CSS = {
   color: 'white',
   '& .MuiSvgIcon-root': {
@@ -85,19 +86,7 @@ function BoardBar({ board }) {
             }>
               Invite
           </Button>
-          <AvatarGroup max={4} sx={{
-            '& .MuiAvatar-root': {
-              width: 32,
-              height: 32,
-              fontSize: 'small'
-            }
-          }}>
-            <Avatar src='https://avatars.githubusercontent.com/u/130242948?v=4' />
-            <Avatar src='https://avatars.githubusercontent.com/u/130242948?v=4' />
-            <Avatar src='https://avatars.githubusercontent.com/u/130242948?v=4' />
-            <Avatar src='https://avatars.githubusercontent.com/u/130242948?v=4' />
-            <Avatar src='https://avatars.githubusercontent.com/u/130242948?v=4' />
-          </AvatarGroup>
+          <BoardUserGroup />
         </Box>
       </Box>
     </>

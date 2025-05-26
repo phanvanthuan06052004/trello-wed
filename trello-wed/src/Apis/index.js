@@ -31,6 +31,10 @@ export const createNewCardAPI = async (data) => {
   const request = await authorizeAxiosInstance.post(`${API_HOST}/v1/cards`, data)
   return request.data // Axios trả kết quả property của nó là data
 }
+export const updateCardAPI = async (cardId, data) => {
+  const request = await authorizeAxiosInstance.put(`${API_HOST}/v1/cards/${cardId}`, data)
+  return request.data // Axios trả kết quả property của nó là data
+}
 export const moveCardDifferenceColumnAPI = async (data) => {
   const request = await authorizeAxiosInstance.put(`${API_HOST}/v1/boards/support/moveCardDifferenceColumn`, data)
   return request.data // Axios trả kết quả property của nó là data

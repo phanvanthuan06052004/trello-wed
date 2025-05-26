@@ -10,20 +10,20 @@ const theme = extendTheme({
     boardBarHeight: BOARD_BAR_HEIGHT,
     boardContentHeight: BOARD_CONTENT_HEIGHT
   },
-  colorSchemes: { //set up for mode
-    light: {
-      palette: {
-        primary: purple,
-        secondary: pink
-      }
-    },
-    dark: {
-      palette: {
-        primary: cyan,
-        secondary: orange
-      }
-    }
-  },
+  // colorSchemes: { //set up for mode
+  //   light: {
+  //     palette: {
+  //       primary: purple,
+  //       secondary: pink
+  //     }
+  //   },
+  //   dark: {
+  //     palette: {
+  //       primary: cyan,
+  //       secondary: orange
+  //     }
+  //   }
+  // },
   components: {
     MuiCssBaseline:{
       styleOverrides: { //customize scollBar
