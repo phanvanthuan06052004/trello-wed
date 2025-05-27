@@ -38,6 +38,7 @@ import { styled } from '@mui/material/styles'
 import { clearCurrentActiveCard, selectCurrentActiveCard, updateCurrentActiveCard } from '~/redux/activeCard/activeCardSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateCardAPI } from '~/Apis'
+import { updateCardInBoard } from '~/redux/activeBoard/activeBoardSlice'
 const SidebarItem = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -68,17 +69,22 @@ function ActiveCard() {
     dispatch(clearCurrentActiveCard())
   }
 
-  const callApiUpdateCard = (data) => {
-    console.log(activeCard._id)
-    const result = updateCardAPI(activeCard._id, data)
-
+  const callApiUpdateCard = async (data) => {
+    // console.log(activeCard._id)
+    const result = await updateCardAPI(activeCard._id, data)
+    // console.log(result)
     // update lại redux currentActiveCard
     dispatch(updateCurrentActiveCard(result))
 
     //update lại activeBoard
+    dispatch(updateCardInBoard(result))
   }
   const onUpdateCardTitle = (newTitle) => {
     callApiUpdateCard({ title: newTitle.trim() })
+  }
+
+  const onUpdateCardDescription = (newDescription) => {
+    callApiUpdateCard({ description: newDescription.trim() })
   }
 
   const onUploadCardCover = (event) => {
@@ -92,6 +98,9 @@ function ActiveCard() {
     reqData.append('cardCover', event.target?.files[0])
 
     // Gọi API...
+    toast.promise(callApiUpdateCard(reqData).finally(() => event.target.value = ''), {
+      pending: 'Uploading cover image...'
+    })
   }
 
   return (
@@ -126,7 +135,7 @@ function ActiveCard() {
           <Box sx={{ mb: 4 }}>
             <img
               style={{ width: '100%', height: '320px', borderRadius: '6px', objectFit: 'cover' }}
-              src="https://trungquandev.com/wp-content/uploads/2023/08/fit-banner-for-facebook-blog-trungquandev-codetq.png"
+              src={activeCard.cover}
               alt="card-cover"
             />
           </Box>
@@ -159,7 +168,10 @@ function ActiveCard() {
               </Box>
 
               {/* Feature 03: Xử lý mô tả của Card */}
-              <CardDescriptionMdEditor />
+              <CardDescriptionMdEditor
+                cardDescriptionValue={activeCard?.description}
+                onUpdateCardDescription={onUpdateCardDescription} // Sử dụng lại hàm onUpdateCardTitle để cập nhật mô tả
+              />
             </Box>
 
             <Box sx={{ mb: 3 }}>
