@@ -9,6 +9,8 @@ import AttachmentIcon from '@mui/icons-material/Attachment'
 import CommentIcon from '@mui/icons-material/Comment'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { useDispatch } from 'react-redux'
+import { showCardDetail, updateCurrentActiveCard } from '~/redux/activeCard/activeCardSlice'
 
 function Card({ card }) {
 
@@ -28,7 +30,12 @@ function Card({ card }) {
     transition,
     opacity: isDragging ? 0.5 : undefined
   }
+  const dispatch = useDispatch()
 
+  const handleClickCard = () => {
+    dispatch(updateCurrentActiveCard(card))
+    dispatch(showCardDetail())
+  }
 
   const shouldShowCardAction = () => {
     return !!card?.memberIds?.length || !!card?.comments?.length || !!card?.attachments?.length
@@ -38,6 +45,7 @@ function Card({ card }) {
       <MuiCard
         ref={setNodeRef}
         style={dndStyleColumn}
+        onClick={handleClickCard}
         {...attributes}
         {...listeners}
         sx={{

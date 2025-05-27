@@ -11,6 +11,8 @@ import Button from '@mui/material/Button'
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt'
 import { capitalizeFirstLetter } from '~/utils/formatters'
 import Tooltip from '@mui/material/Tooltip'
+import BoardUserGroup from './BoardUserGroup'
+import InviteBoardUser from './InviteBoardUser'
 const BOARD_CSS = {
   color: 'white',
   '& .MuiSvgIcon-root': {
@@ -71,33 +73,9 @@ function BoardBar({ board }) {
           />
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mr: 2 }}>
-          <Button
-            variant="outlined"
-            sx={{
-              color: 'white',
-              borderColor: 'white',
-              '&:hover':{
-                borderColor: 'white'
-              }
-            }}
-            startIcon={
-              <PersonAddAltIcon />
-            }>
-              Invite
-          </Button>
-          <AvatarGroup max={4} sx={{
-            '& .MuiAvatar-root': {
-              width: 32,
-              height: 32,
-              fontSize: 'small'
-            }
-          }}>
-            <Avatar src='https://avatars.githubusercontent.com/u/130242948?v=4' />
-            <Avatar src='https://avatars.githubusercontent.com/u/130242948?v=4' />
-            <Avatar src='https://avatars.githubusercontent.com/u/130242948?v=4' />
-            <Avatar src='https://avatars.githubusercontent.com/u/130242948?v=4' />
-            <Avatar src='https://avatars.githubusercontent.com/u/130242948?v=4' />
-          </AvatarGroup>
+          <InviteBoardUser boardId={board._id}/>
+
+          <BoardUserGroup boardUsers={board?.FE_allMembers}/>
         </Box>
       </Box>
     </>

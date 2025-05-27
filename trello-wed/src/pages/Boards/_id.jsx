@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchBoardDetailsAPI, selectCurrentActiveBoard, updateCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
 import { useParams } from 'react-router-dom'
 import PageLoadingSpinner from '~/components/Loading/PageLoadingSpinner'
+import ActiveCard from '~/components/Modal/ActiveCard/ActiveCard'
 function Board() {
   const { boardId } = useParams()
   const dispatch = useDispatch()
@@ -17,8 +18,6 @@ function Board() {
   useEffect(() => {
     dispatch(fetchBoardDetailsAPI(boardId))
   }, [dispatch, boardId])
-
-
 
   const moveColumn = async (newOrderedColumns) => {
     const orderedColumn = newOrderedColumns.map(c => c._id)
@@ -87,6 +86,8 @@ function Board() {
   }
   return (
     <Container disableGutters maxWidth={false} sx={{ height: '100vh' }}>
+      {/* chỉ khi có trong redux thì mới active, bắt sự kiện mỗi khi click 1 card cụ thể */}
+      <ActiveCard />
       <AppBar />
       <BoardBar board={board} />
       <BoardContent
