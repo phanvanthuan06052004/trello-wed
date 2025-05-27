@@ -35,10 +35,11 @@ import CardActivitySection from './CardActivitySection'
 
 
 import { styled } from '@mui/material/styles'
-import { clearCurrentActiveCard, selectCurrentActiveCard, updateCurrentActiveCard } from '~/redux/activeCard/activeCardSlice'
+import { clearCurrentActiveCard, selectCurrentActiveCard, selectIsShowCardDetail, updateCurrentActiveCard } from '~/redux/activeCard/activeCardSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateCardAPI } from '~/Apis'
 import { updateCardInBoard } from '~/redux/activeBoard/activeBoardSlice'
+import { comment } from '@uiw/react-md-editor'
 const SidebarItem = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -65,6 +66,7 @@ const SidebarItem = styled(Box)(({ theme }) => ({
 function ActiveCard() {
   const dispatch = useDispatch()
   const activeCard = useSelector(selectCurrentActiveCard)
+  const isShowCardDetail = useSelector(selectIsShowCardDetail)
   const handleCloseModal = () => {
     dispatch(clearCurrentActiveCard())
   }
@@ -103,10 +105,15 @@ function ActiveCard() {
     })
   }
 
+  const onAddCardComment = async (newComment) => {
+    // console.log(newComment)
+    await callApiUpdateCard({ comment: newComment })
+  }
+
   return (
     <Modal
       disableScrollLock
-      open={true}
+      open={isShowCardDetail}
       onClose={handleCloseModal} // Sử dụng onClose trong trường hợp muốn đóng Modal bằng nút ESC hoặc click ra ngoài Modal
       sx={{ overflowY: 'auto' }}>
       <Box sx={{
@@ -181,7 +188,10 @@ function ActiveCard() {
               </Box>
 
               {/* Feature 04: Xử lý các hành động, ví dụ comment vào Card */}
-              <CardActivitySection />
+              <CardActivitySection 
+                commentList={activeCard?.comments || []}
+                onAddCardComment={onAddCardComment} // Hàm này sẽ được định nghĩa trong CardActivitySection
+              />
             </Box>
           </Grid>
 

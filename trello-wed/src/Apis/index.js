@@ -3,13 +3,14 @@ import { API_HOST } from '~/utils/Constants'
 import { toast } from 'react-toastify'
 
 // API board
-// export const fetchBoarDetailsAPI = async (board) => {
-//   const request = await axios.get(`${API_HOST}/v1/boards/${board}`)
-//   return request.data // Axios trả kết quả property của nó là data
-// }
 export const updateBoardDetailsAPI = async (boardId, data) => {
   const request = await authorizeAxiosInstance.put(`${API_HOST}/v1/boards/${boardId}`, data)
   return request.data // Axios trả kết quả property của nó là data
+}
+export const inviteUserToBoardAPI = async (data) => {
+  const request = await authorizeAxiosInstance.post(`${API_HOST}/v1/invitations/board`, data)
+  toast.success('User invited to board success!', { theme: 'colored' })
+  return request.data
 }
 
 // API column

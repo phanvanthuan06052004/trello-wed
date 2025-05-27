@@ -10,7 +10,7 @@ import CommentIcon from '@mui/icons-material/Comment'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useDispatch } from 'react-redux'
-import { updateCurrentActiveCard } from '~/redux/activeCard/activeCardSlice'
+import { showCardDetail, updateCurrentActiveCard } from '~/redux/activeCard/activeCardSlice'
 
 function Card({ card }) {
 
@@ -31,8 +31,10 @@ function Card({ card }) {
     opacity: isDragging ? 0.5 : undefined
   }
   const dispatch = useDispatch()
+
   const handleClickCard = () => {
     dispatch(updateCurrentActiveCard(card))
+    dispatch(showCardDetail())
   }
 
   const shouldShowCardAction = () => {

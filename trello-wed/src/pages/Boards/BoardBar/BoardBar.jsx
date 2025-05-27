@@ -12,6 +12,7 @@ import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt'
 import { capitalizeFirstLetter } from '~/utils/formatters'
 import Tooltip from '@mui/material/Tooltip'
 import BoardUserGroup from './BoardUserGroup'
+import InviteBoardUser from './InviteBoardUser'
 const BOARD_CSS = {
   color: 'white',
   '& .MuiSvgIcon-root': {
@@ -72,20 +73,8 @@ function BoardBar({ board }) {
           />
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mr: 2 }}>
-          <Button
-            variant="outlined"
-            sx={{
-              color: 'white',
-              borderColor: 'white',
-              '&:hover':{
-                borderColor: 'white'
-              }
-            }}
-            startIcon={
-              <PersonAddAltIcon />
-            }>
-              Invite
-          </Button>
+          <InviteBoardUser boardId={board._id}/>
+
           <BoardUserGroup boardUsers={board?.FE_allMembers}/>
         </Box>
       </Box>
