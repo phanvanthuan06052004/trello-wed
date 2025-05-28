@@ -10,13 +10,16 @@ import { useForm } from 'react-hook-form'
 import { EMAIL_RULE, FIELD_REQUIRED_MESSAGE, EMAIL_RULE_MESSAGE } from '~/utils/validators'
 import FieldErrorAlert from '~/components/Form/FieldErrorAlert'
 import { inviteUserToBoardAPI } from '~/Apis'
-
+import { useDispatch } from 'react-redux'
+import { fetchInvitationAPI, updateCurrentNotifications } from '~/redux/notifications/notificationsSlice'
+import { socketIoInstance } from '~/socketClient'
 function InviteBoardUser({ boardId }) {
   /**
    * Xử lý Popover để ẩn hoặc hiện một popup nhỏ, tương tự docs để tham khảo ở đây:
    * https://mui.com/material-ui/react-popover/
   */
   const [anchorPopoverElement, setAnchorPopoverElement] = useState(null)
+  const dispatch = useDispatch()
   const isOpenPopover = Boolean(anchorPopoverElement)
   const popoverId = isOpenPopover ? 'invite-board-user-popover' : undefined
   const handleTogglePopover = (event) => {
@@ -27,15 +30,16 @@ function InviteBoardUser({ boardId }) {
   const { register, handleSubmit, setValue, formState: { errors } } = useForm()
   const submitInviteUserToBoard = (data) => {
     const { inviteeEmail } = data
-    console.log('inviteeEmail:', inviteeEmail)
 
-    
-    inviteUserToBoardAPI({ inviteeEmail, boardId }).then(() => {
+    inviteUserToBoardAPI({ inviteeEmail, boardId }).then(invitation => {
       // Clear thẻ input sử dụng react-hook-form bằng setValue
       setValue('inviteeEmail', null)
       setAnchorPopoverElement(null)
-
+      // dispatch(fetchInvitationAPI())
       // xử lý real-time bắn thông báo cho người dùng khác
+      // emit sự kiện FE_USER_INVITE_TO_BOARD đến server
+      // console.log(invitation)
+      socketIoInstance.emit('FE_USER_INVITE_TO_BOARD', invitation)
     })
   }
 

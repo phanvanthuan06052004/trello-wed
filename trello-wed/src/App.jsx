@@ -18,9 +18,9 @@ function App() {
   return (
 
     <Routes>
-      <Route path='/' element={
+      {/* <Route path='/' element={
         <Navigate to={'/boards/67e23e3ef43f67ae0a1d8964'} replace={true} /> // replace là xóa đi dấu vết chuyển hướng để tánh user back lại
-      } />
+      } /> */}
       <Route element={<ProtectRoutes user={currentUser}/>}>
         {/* outlet sẽ chạy vài đây */}
         <Route path="/boards/:boardId" element={<Board />} />

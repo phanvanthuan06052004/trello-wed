@@ -7,7 +7,7 @@ import { activeCardReducer } from './activeCard/activeCardSlice'
 import { combineReducers } from 'redux'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage' // mặt định là localstorage
-
+import { notificationReducer } from './notifications/notificationsSlice'
 const rootPersistConfig = {
   key: 'root', // key này do chúng ta chỉ định
   storage, // lưu vào localStorage
@@ -19,7 +19,8 @@ const rootPersistConfig = {
 const reducer = combineReducers({
   activeBoard: activeBoardReducer,
   user: userReducer,
-  activeCard: activeCardReducer
+  activeCard: activeCardReducer,
+  notifications: notificationReducer
 })
 
 // Thực hiện persist Reducer

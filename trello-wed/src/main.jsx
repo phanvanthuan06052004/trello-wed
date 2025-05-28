@@ -23,10 +23,11 @@ const persistor = persistStore(store)
 import { injectStore } from './utils/authorizeAxios'
 injectStore(store)
 
+
 createRoot(document.getElementById('root')).render(
-  <BrowserRouter basename='/'>
-    <Provider store={store}>
-      <PersistGate persistor={persistor} >
+  <Provider store={store}>
+    <PersistGate persistor={persistor} >
+      <BrowserRouter basename='/'>
         <CssVarsProvider theme={theme}>
           <ConfirmProvider defaultOptions={{
             allowClose: false,
@@ -42,7 +43,7 @@ createRoot(document.getElementById('root')).render(
             <ToastContainer />
           </ConfirmProvider>
         </CssVarsProvider>
-      </PersistGate>
-    </Provider>
-  </BrowserRouter>
+      </BrowserRouter>
+    </PersistGate>
+  </Provider>
 )
