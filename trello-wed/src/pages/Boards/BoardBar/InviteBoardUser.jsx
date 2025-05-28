@@ -10,6 +10,8 @@ import { useForm } from 'react-hook-form'
 import { EMAIL_RULE, FIELD_REQUIRED_MESSAGE, EMAIL_RULE_MESSAGE } from '~/utils/validators'
 import FieldErrorAlert from '~/components/Form/FieldErrorAlert'
 import { inviteUserToBoardAPI } from '~/Apis'
+import { useDispatch } from 'react-redux'
+import { fetchInvitationAPI, updateCurrentNotifications } from '~/redux/notifications/notificationsSlice'
 
 function InviteBoardUser({ boardId }) {
   /**
@@ -17,6 +19,7 @@ function InviteBoardUser({ boardId }) {
    * https://mui.com/material-ui/react-popover/
   */
   const [anchorPopoverElement, setAnchorPopoverElement] = useState(null)
+  const dispatch = useDispatch()
   const isOpenPopover = Boolean(anchorPopoverElement)
   const popoverId = isOpenPopover ? 'invite-board-user-popover' : undefined
   const handleTogglePopover = (event) => {
@@ -34,7 +37,7 @@ function InviteBoardUser({ boardId }) {
       // Clear thẻ input sử dụng react-hook-form bằng setValue
       setValue('inviteeEmail', null)
       setAnchorPopoverElement(null)
-
+      // dispatch(fetchInvitationAPI())
       // xử lý real-time bắn thông báo cho người dùng khác
     })
   }

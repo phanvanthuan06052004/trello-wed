@@ -21,6 +21,7 @@ import SearchIcon from '@mui/icons-material/Search'
 import CloseIcon from '@mui/icons-material/Close'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import Notifications from './Notifications/Notifications'
 function AppBar() {
   const [searchValue, setSearchValue] = useState('')
   return (
@@ -108,11 +109,8 @@ function AppBar() {
             }}
           />
           <ModeSelect />
-          <Badge color="error" variant="dot" sx={{ cursor: 'pointer' }}>
-            <Tooltip title="informations">
-              <NotificationsNoneIcon sx={{ color: 'white' }} />
-            </Tooltip>
-          </Badge>
+          {/* xử lý lấy thông báo */}
+          <Notifications />
           <Tooltip title="help" sx={{ cursor: 'pointer' }}>
             <HelpOutlineIcon sx={{ color: 'white' }} />
           </Tooltip>
