@@ -23,11 +23,6 @@ const persistor = persistStore(store)
 import { injectStore } from './utils/authorizeAxios'
 injectStore(store)
 
-// socket io
-import { io } from 'socket.io-client'
-import { API_HOST } from './utils/Constants'
-export const socketIoInstance = io(API_HOST)
-
 
 createRoot(document.getElementById('root')).render(
   <Provider store={store}>
