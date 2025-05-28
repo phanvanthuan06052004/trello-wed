@@ -12,7 +12,7 @@ import FieldErrorAlert from '~/components/Form/FieldErrorAlert'
 import { inviteUserToBoardAPI } from '~/Apis'
 import { useDispatch } from 'react-redux'
 import { fetchInvitationAPI, updateCurrentNotifications } from '~/redux/notifications/notificationsSlice'
-
+import { socketIoInstance } from '~/main'
 function InviteBoardUser({ boardId }) {
   /**
    * Xử lý Popover để ẩn hoặc hiện một popup nhỏ, tương tự docs để tham khảo ở đây:
@@ -30,15 +30,16 @@ function InviteBoardUser({ boardId }) {
   const { register, handleSubmit, setValue, formState: { errors } } = useForm()
   const submitInviteUserToBoard = (data) => {
     const { inviteeEmail } = data
-    console.log('inviteeEmail:', inviteeEmail)
 
-    
-    inviteUserToBoardAPI({ inviteeEmail, boardId }).then(() => {
+    inviteUserToBoardAPI({ inviteeEmail, boardId }).then(invitation => {
       // Clear thẻ input sử dụng react-hook-form bằng setValue
       setValue('inviteeEmail', null)
       setAnchorPopoverElement(null)
       // dispatch(fetchInvitationAPI())
       // xử lý real-time bắn thông báo cho người dùng khác
+      // emit sự kiện FE_USER_INVITE_TO_BOARD đến server
+      // console.log(invitation)
+      socketIoInstance.emit('FE_USER_INVITE_TO_BOARD', invitation)
     })
   }
 

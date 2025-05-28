@@ -14,8 +14,10 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd'
 import DoneIcon from '@mui/icons-material/Done'
 import NotInterestedIcon from '@mui/icons-material/NotInterested'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchInvitationAPI, selectCurrentNotifications, updateBoardInvitationAPI } from '~/redux/notifications/notificationsSlice'
-
+import { addNotifications, fetchInvitationAPI, selectCurrentNotifications, updateBoardInvitationAPI } from '~/redux/notifications/notificationsSlice'
+import { socketIoInstance } from '~/main'
+import { selectCurrentUser } from '~/redux/user/userSlice'
+import { useNavigate } from 'react-router-dom'
 const BOARD_INVITATION_STATUS = {
   PENDING: 'PENDING',
   ACCEPTED: 'ACCEPTED',
@@ -26,13 +28,36 @@ function Notifications() {
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const currentNotifications = useSelector(selectCurrentNotifications) || []
+  const currentUser = useSelector(selectCurrentUser)
+  const [notification, setNotification] = useState(false)
   // call api để lấy dữ liệu thông báo
   useEffect(() => {
     dispatch(fetchInvitationAPI())
-  }, [dispatch])
+
+    // function xử lý nhận thông báo từ server
+    const handleReceiveNotification = (invitation) => {
+      // kiểm tra xem thông báo đó có phải là thông báo dành cho người dùng hiện tại hay không
+      if (invitation.inviteeId === currentUser._id) {
+        // nếu có thì sẽ thêm vào kho redux store
+        dispatch(addNotifications(invitation))
+        // và set notification là true để hiện icon thông báo
+        setNotification(true)
+      }
+    }
+
+    // Lắng nghe sự kiện BE_USER_INVITE_TO_BOARD từ server
+    socketIoInstance.on('BE_USER_INVITE_TO_BOARD', handleReceiveNotification)
+
+    // clear socket.io listener
+    return () => {
+      socketIoInstance.off('BE_USER_INVITE_TO_BOARD', handleReceiveNotification)
+    }
+  }, [dispatch, currentUser._id])
 
   const handleClickNotificationIcon = (event) => {
+    setNotification(false) // khi click vào icon thông báo thì sẽ ẩn đi icon thông báo
     setAnchorEl(event.currentTarget)
   }
   const handleClose = () => {
@@ -43,7 +68,8 @@ function Notifications() {
     // console.log('status: ', status)
     // console.log(notificationId, status)
     dispatch(updateBoardInvitationAPI({ notificationId, status })).then((res) => {
-      console.log(res)
+      navigate(`/boards/${res.payload.boardInvitation.boardId}`) // chuyển hướng đến boardId của thông báo
+      handleClose() // đóng menu thông báo
     })
   }
 
@@ -52,8 +78,7 @@ function Notifications() {
       <Tooltip title="Notifications">
         <Badge
           color="warning"
-          // variant="none"
-          variant="dot"
+          variant={notification ? 'dot' : 'none'}
           sx={{ cursor: 'pointer' }}
           id="basic-button-open-notification"
           aria-controls={open ? 'basic-notification-drop-down' : undefined}
@@ -62,8 +87,7 @@ function Notifications() {
           onClick={handleClickNotificationIcon}
         >
           <NotificationsNoneIcon sx={{
-            // color: 'white'
-            color: 'yellow'
+            color: notification ? 'yellow' : 'white'
           }} />
         </Badge>
       </Tooltip>
