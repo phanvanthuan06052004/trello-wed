@@ -12,6 +12,15 @@ export const inviteUserToBoardAPI = async (data) => {
   toast.success('User invited to board success!', { theme: 'colored' })
   return request.data
 }
+export const fetchBoardsAPI = async (searchBoard) => {
+  const request = await authorizeAxiosInstance.get(`${API_HOST}/v1/boards${searchBoard}`)
+  return request.data
+}
+export const createNewBoardAPI = async (data) => {
+  const request = await authorizeAxiosInstance.post(`${API_HOST}/v1/boards`, data)
+  toast.success('Create new board successfully!', { theme: 'colored' })
+  return request.data // Axios trả kết quả property của nó là data
+}
 
 // API column
 export const createNewColumnAPI = async (data) => {
@@ -54,16 +63,5 @@ export const verifyUserAPI = async (data) => {
 }
 export const refreshTokenAPI = async () => {
   const request = await authorizeAxiosInstance.post(`${API_HOST}/v1/users/refresh-token`)
-  return request.data // Axios trả kết quả property của nó là data
-}
-
-// API board
-export const fetchBoardsAPI = async (searchBoard) => {
-  const request = await authorizeAxiosInstance.get(`${API_HOST}/v1/boards${searchBoard}`)
-  return request.data
-}
-export const createNewBoardAPI = async (data) => {
-  const request = await authorizeAxiosInstance.post(`${API_HOST}/v1/boards`, data)
-  toast.success('Create new board successfully!', { theme: 'colored' })
   return request.data // Axios trả kết quả property của nó là data
 }

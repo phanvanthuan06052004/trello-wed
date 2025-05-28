@@ -40,7 +40,7 @@ function AppBar() {
               <AppsIcon sx={{ color: 'white', verticalAlign: 'middle'}} />
             </Tooltip>
           </Link>
-          <Link to="/" >
+          <Link to="/boards" >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
               <SvgIcon component={TrelloIcon} inheritViewBox fontSize="small" sx={{ color: 'white' }} />
               <Typography variant="span" sx={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'white' }}>
