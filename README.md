@@ -1,4 +1,4 @@
-# Trello Clone Frontend
+# Trello Frontend
 
 Frontend for Trello application using React, Vite, and Material UI.
 
